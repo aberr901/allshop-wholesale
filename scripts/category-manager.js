@@ -167,6 +167,3 @@ class CategoryManager {
         setTimeout(() => notification.remove(), 4000);
     }
 }
-
-// Global instance will be initialized from admin.js
-let categoryManager;
