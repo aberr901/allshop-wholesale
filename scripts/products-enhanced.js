@@ -162,6 +162,9 @@ function displayProducts(products) {
             <div class="product-image">
                 <img src="${imageUrl}" alt="${product.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect fill=%22%23ddd%22 width=%22300%22 height=%22300%22/%3E%3Ctext fill=%22%23666%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22%3E${product.name}%3C/text%3E%3C/svg%3E'">
                 ${product.brand ? `<div class="product-brand">${product.brand}</div>` : ''}
+                <div class="product-stock ${product.stock < 10 ? 'low-stock' : ''}">
+                    ${product.stock > 0 ? `✓ ${product.stock} in stock` : '❌ Out of stock'}
+                </div>
             </div>
             <div class="product-info">
                 <div class="product-category">${product.category || ''}</div>
@@ -171,11 +174,11 @@ function displayProducts(products) {
                     <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
                     <div class="product-actions">
                         <div class="quantity-selector">
-                            <button class="qty-btn qty-minus" data-product-id="${product.id}">−</button>
-                            <input type="number" class="qty-input" id="qty-${product.id}" value="1" min="1" max="999">
-                            <button class="qty-btn qty-plus" data-product-id="${product.id}">+</button>
+                            <button class="qty-btn qty-minus" data-product-id="${product.id}" ${product.stock === 0 ? 'disabled' : ''}>−</button>
+                            <input type="number" class="qty-input" id="qty-${product.id}" value="1" min="1" max="${product.stock}" ${product.stock === 0 ? 'disabled' : ''}>
+                            <button class="qty-btn qty-plus" data-product-id="${product.id}" ${product.stock === 0 ? 'disabled' : ''}>+</button>
                         </div>
-                        <button class="add-to-cart" data-product='${JSON.stringify(product)}'>Add to Cart</button>
+                        <button class="add-to-cart" data-product='${JSON.stringify(product)}' ${product.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
                     </div>
                 </div>
             </div>
@@ -200,7 +203,8 @@ function displayProducts(products) {
             e.stopPropagation();
             const productId = e.target.dataset.productId;
             const input = document.getElementById(`qty-${productId}`);
-            if (input.value < 999) {
+            const maxStock = parseInt(input.getAttribute('max'));
+            if (parseInt(input.value) < maxStock) {
                 input.value = parseInt(input.value) + 1;
             }
         });
@@ -211,6 +215,19 @@ function displayProducts(products) {
         btn.addEventListener('click', (e) => {
             const product = JSON.parse(e.target.dataset.product);
             const quantity = parseInt(document.getElementById(`qty-${product.id}`).value) || 1;
+            
+            // Check stock availability
+            if (product.stock === 0) {
+                alert('❌ This product is currently out of stock.');
+                return;
+            }
+            
+            if (quantity > product.stock) {
+                alert(`❌ Only ${product.stock} units available in stock.\nPlease adjust the quantity.`);
+                document.getElementById(`qty-${product.id}`).value = product.stock;
+                return;
+            }
+            
             if (window.cart) {
                 window.cart.addItem(product, quantity);
             }
