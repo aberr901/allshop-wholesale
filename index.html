@@ -224,33 +224,9 @@
             if (googleBtn) {
                 googleBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    
-                    // Prepare order details email
-                    const orderItems = cart.items.map(item => 
-                        `- ${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`
-                    ).join('\n');
-                    
-                    const mailtoLink = `mailto:info@allshopwholesale.com?subject=${encodeURIComponent('New Wholesale Order Request')}&body=${encodeURIComponent(
-                        'NEW ORDER REQUEST\n\n' +
-                        'Customer signed in via Google\n\n' +
-                        'ORDER DETAILS:\n' +
-                        orderItems + '\n\n' +
-                        `Total Items: ${cart.items.length}\n` +
-                        `Total Amount: $${cart.getTotal().toFixed(2)}\n\n` +
-                        'Please contact the customer to complete this order.'
-                    )}`;
-                    
-                    // Open mailto
-                    window.location.href = mailtoLink;
-                    
-                    alert('🎉 Sign in successful! (This is a demo)\n\n' + 
-                          'Your order details:\n' + 
-                          `Items: ${cart.items.length}\n` +
-                          `Total: $${cart.getTotal().toFixed(2)}\n\n` +
-                          'Your order request is being prepared in your email client.\nPlease click Send to submit your wholesale order request.');
-                    loginModal.classList.remove('active');
-                    cart.items = [];
-                    cart.saveCart();
+                    alert('❌ Sign in failed\n\nNo account found with this Google account.\n\nPlease register for a wholesale account first.');
+                    // Show create account message
+                    document.querySelector('.login-footer').style.display = 'block';
                 });
             }
 
@@ -259,34 +235,10 @@
                 loginForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const email = document.getElementById('loginEmail').value;
-                    
-                    // Prepare order details email
-                    const orderItems = cart.items.map(item => 
-                        `- ${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`
-                    ).join('\n');
-                    
-                    const mailtoLink = `mailto:info@allshopwholesale.com?subject=${encodeURIComponent('New Wholesale Order Request')}&body=${encodeURIComponent(
-                        'NEW ORDER REQUEST\n\n' +
-                        `Customer Email: ${email}\n\n` +
-                        'ORDER DETAILS:\n' +
-                        orderItems + '\n\n' +
-                        `Total Items: ${cart.items.length}\n` +
-                        `Total Amount: $${cart.getTotal().toFixed(2)}\n\n` +
-                        'Please contact the customer to complete this order.'
-                    )}`;
-                    
-                    // Open mailto
-                    window.location.href = mailtoLink;
-                    
-                    alert('🎉 Sign in successful! (This is a demo)\n\n' +
-                          `Email: ${email}\n` +
-                          `Items: ${cart.items.length}\n` +
-                          `Total: $${cart.getTotal().toFixed(2)}\n\n` +
-                          'Your order request is being prepared in your email client.\nPlease click Send to submit your wholesale order request.');
-                    loginModal.classList.remove('active');
+                    alert('❌ Sign in failed\n\nNo account found for: ' + email + '\n\nPlease register for a wholesale account first.');
+                    // Show create account message
+                    document.querySelector('.login-footer').style.display = 'block';
                     loginForm.reset();
-                    cart.items = [];
-                    cart.saveCart();
                 });
             }
 
@@ -294,7 +246,10 @@
             if (createAccountLink) {
                 createAccountLink.addEventListener('click', (e) => {
                     e.preventDefault();
-                    alert('Account creation is not available in this demo.\nPlease use the sign-in options above.');
+                    alert('📧 Account Registration\n\nTo create a wholesale account, please contact us:\n\n' +
+                          'Email: info@allshopwholesale.com\n' +
+                          'Phone: 0050946820\n\n' +
+                          'Our team will set up your account and provide login credentials.');
                 });
             }
         });

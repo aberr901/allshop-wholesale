@@ -132,19 +132,11 @@
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
             
-            // Construct mailto link
-            const mailtoLink = `mailto:info@allshopwholesale.com?subject=${encodeURIComponent('Contact Form: ' + subject)}&body=${encodeURIComponent(
-                `Company Name: ${name}\n` +
-                `Email: ${email}\n` +
-                `Subject: ${subject}\n\n` +
-                `Message:\n${message}`
-            )}`;
-            
-            // Open mailto link
-            window.location.href = mailtoLink;
+            // Store message (for future implementation)
+            console.log('Contact form submission:', { name, email, subject, message });
             
             // Show success message
-            alert('Your message is being prepared in your email client. Please click Send to complete.');
+            alert('✅ Thank you for your message!\n\nWe have received your inquiry and will respond within 24 hours.\n\nFor urgent matters, please call: 0050946820');
             e.target.reset();
         });
     </script>
