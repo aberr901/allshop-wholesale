@@ -169,19 +169,50 @@ function displayProducts(products) {
                 <p class="product-description">${product.description || ''}</p>
                 <div class="product-footer">
                     <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
-                    <button class="add-to-cart" data-product='${JSON.stringify(product)}'>Add to Cart</button>
+                    <div class="product-actions">
+                        <div class="quantity-selector">
+                            <button class="qty-btn qty-minus" data-product-id="${product.id}">−</button>
+                            <input type="number" class="qty-input" id="qty-${product.id}" value="1" min="1" max="999">
+                            <button class="qty-btn qty-plus" data-product-id="${product.id}">+</button>
+                        </div>
+                        <button class="add-to-cart" data-product='${JSON.stringify(product)}'>Add to Cart</button>
+                    </div>
                 </div>
             </div>
         </div>
         `;
     }).join('');
     
+    // Add click handlers for quantity buttons
+    document.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const productId = e.target.dataset.productId;
+            const input = document.getElementById(`qty-${productId}`);
+            if (input.value > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        });
+    });
+    
+    document.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const productId = e.target.dataset.productId;
+            const input = document.getElementById(`qty-${productId}`);
+            if (input.value < 999) {
+                input.value = parseInt(input.value) + 1;
+            }
+        });
+    });
+    
     // Add click handlers for add to cart buttons
     document.querySelectorAll('.add-to-cart').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const product = JSON.parse(e.target.dataset.product);
+            const quantity = parseInt(document.getElementById(`qty-${product.id}`).value) || 1;
             if (window.cart) {
-                window.cart.addItem(product);
+                window.cart.addItem(product, quantity);
             }
         });
     });

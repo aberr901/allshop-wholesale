@@ -260,9 +260,19 @@ class StorageService {
             return 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect fill=%22%23ddd%22 width=%22300%22 height=%22300%22/%3E%3Ctext fill=%22%23666%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22%3ENo Image%3C/text%3E%3C/svg%3E';
         }
         
-        // If it's already a full URL with our storage account, add SAS token if needed
-        if (imageUrl.includes(AZURE_CONFIG.storageAccountName) && AZURE_CONFIG.sasToken) {
-            return `${imageUrl}?${AZURE_CONFIG.sasToken}`;
+        // If it's an external URL (starts with http:// or https://), return as-is
+        if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+            // Only add SAS token if it's our storage account
+            if (imageUrl.includes(AZURE_CONFIG.storageAccountName) && AZURE_CONFIG.sasToken) {
+                const separator = imageUrl.includes('?') ? '&' : '?';
+                return `${imageUrl}${separator}${AZURE_CONFIG.sasToken}`;
+            }
+            return imageUrl;
+        }
+        
+        // If it's a relative path, construct full Azure blob URL with SAS token
+        if (AZURE_CONFIG.sasToken) {
+            return AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.imagesContainerName, imageUrl);
         }
         
         return imageUrl;
