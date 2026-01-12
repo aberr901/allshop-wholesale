@@ -37,7 +37,9 @@ const MSAL_CONFIG = {
     auth: {
         clientId: '5ad34e8e-91ea-4264-bfdb-0f71d1fb5258', // From App Registration
         authority: 'https://login.microsoftonline.com/7155ba15-8532-4d67-8c0b-dce23ad3c48f',
-        redirectUri: window.location.origin + '/admin.html'
+        redirectUri: window.location.hostname === 'localhost' ? 
+            'http://localhost:8000/admin.html' : 
+            'https://aberr901.github.io/online-store/admin.html'
     },
     cache: {
         cacheLocation: 'sessionStorage',
