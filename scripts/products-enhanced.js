@@ -104,7 +104,7 @@ function displayBrands(brands) {
                 logoUrl = brand.logoUrl + '?' + AZURE_CONFIG.readOnlySasToken;
             }
         } else {
-            logoUrl = 'https://via.placeholder.com/80?text=' + encodeURIComponent(brand.name);
+            logoUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" fill="%23ddd"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23666" font-family="Arial" font-size="14">' + brand.name + '</text></svg>');
         }
         
         return `
