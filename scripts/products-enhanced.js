@@ -109,7 +109,7 @@ function displayBrands(brands) {
         
         return `
         <div class="brand-card" data-brand="${brand.name}">
-            <img class="brand-logo" src="${logoUrl}" alt="${brand.name}" onerror="this.src='https://via.placeholder.com/80?text=${encodeURIComponent(brand.name)}'">
+            <img class="brand-logo" src="${logoUrl}" alt="${brand.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22%3E%3Crect fill=%22%23ddd%22 width=%2280%22 height=%2280%22/%3E%3Ctext fill=%22%23666%22 font-family=%22Arial%22 font-size=%2212%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22%3E${brand.name}%3C/text%3E%3C/svg%3E'">
             <div class="brand-name">${brand.name}</div>
         </div>
         `;
@@ -154,13 +154,13 @@ function displayProducts(products) {
                 imageUrl = productImage + '?' + AZURE_CONFIG.readOnlySasToken;
             }
         } else {
-            imageUrl = 'https://via.placeholder.com/300?text=' + encodeURIComponent(product.name);
+            imageUrl = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect fill=%22%23ddd%22 width=%22300%22 height=%22300%22/%3E%3Ctext fill=%22%23666%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22%3E' + encodeURIComponent(product.name) + '%3C/text%3E%3C/svg%3E';
         }
         
         return `
         <div class="product-card" data-category="${product.category}" data-brand="${product.brand}">
             <div class="product-image">
-                <img src="${imageUrl}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300?text=${encodeURIComponent(product.name)}'">
+                <img src="${imageUrl}" alt="${product.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect fill=%22%23ddd%22 width=%22300%22 height=%22300%22/%3E%3Ctext fill=%22%23666%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22%3E${product.name}%3C/text%3E%3C/svg%3E'">
                 ${product.brand ? `<div class="product-brand">${product.brand}</div>` : ''}
             </div>
             <div class="product-info">
