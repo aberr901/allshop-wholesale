@@ -1,0 +1,280 @@
+// Enhanced Products Display with Brands
+// Add to products.js
+
+async function initProductsWithBrands() {
+    try {
+        // Load brands first
+        const brands = await storageService.fetchBrands();
+        displayBrands(brands);
+        
+        // Load categories
+        const categories = await storageService.fetchCategories();
+        populateNavigationDropdowns(brands, categories);
+
+        // Load and display products
+        const products = await storageService.fetchProducts();
+        displayProducts(products);
+        populateFilters(products, categories);
+        setupFiltering(products);
+    } catch (error) {
+        console.error('Error initializing products:', error);
+    }
+}
+
+function populateNavigationDropdowns(brands, categories) {
+    // Populate brands dropdown in navigation
+    const brandsDropdown = document.getElementById('brandsDropdown');
+    if (brandsDropdown && brands.length > 0) {
+        brandsDropdown.innerHTML = brands.map(brand => {
+            let logoUrl = '';
+            if (brand.logoUrl) {
+                // Check if external URL or blob storage URL
+                if (brand.logoUrl.startsWith('http://') || brand.logoUrl.startsWith('https://')) {
+                    if (brand.logoUrl.includes('blob.core.windows.net')) {
+                        // Azure blob URL - append SAS token
+                        logoUrl = brand.logoUrl + '?' + AZURE_CONFIG.readOnlySasToken;
+                    } else {
+                        // External URL - use as-is
+                        logoUrl = brand.logoUrl;
+                    }
+                } else {
+                    // Relative path - append SAS token
+                    logoUrl = brand.logoUrl + '?' + AZURE_CONFIG.readOnlySasToken;
+                }
+            }
+            const logoHtml = logoUrl ? 
+                '<img src="' + logoUrl + '" alt="' + brand.name + '" onerror="this.style.display=\'none\'">' : 
+                '';
+            return '<a href="#products" data-brand="' + brand.name + '">' + 
+                logoHtml + brand.name + '</a>';
+        }).join('');
+        
+        // Add click handlers
+        brandsDropdown.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const brandName = link.dataset.brand;
+                document.getElementById('brandFilter').value = brandName;
+                document.getElementById('brandFilter').dispatchEvent(new Event('change'));
+                document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    }
+    
+    // Populate categories dropdown
+    const categoriesDropdown = document.getElementById('categoriesDropdown');
+    if (categoriesDropdown && categories && categories.length > 0) {
+        categoriesDropdown.innerHTML = categories.map(cat => 
+            '<a href="#products" data-category="' + cat.name + '">' + cat.name + '</a>'
+        ).join('');
+        
+        // Add click handlers
+        categoriesDropdown.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const category = link.dataset.category;
+                document.getElementById('categoryFilter').value = category;
+                document.getElementById('categoryFilter').dispatchEvent(new Event('change'));
+                document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    }
+}
+
+function displayBrands(brands) {
+    const brandsGrid = document.getElementById('brandsGrid');
+    if (!brandsGrid || brands.length === 0) return;
+
+    brandsGrid.innerHTML = brands.map(brand => {
+        let logoUrl = '';
+        if (brand.logoUrl) {
+            // Check if external URL (http/https) or blob storage URL
+            if (brand.logoUrl.startsWith('http://') || brand.logoUrl.startsWith('https://')) {
+                if (brand.logoUrl.includes('blob.core.windows.net')) {
+                    // Azure blob URL - append SAS token (check if already has query params)
+                    logoUrl = brand.logoUrl.includes('?') ? 
+                        brand.logoUrl + '&' + AZURE_CONFIG.readOnlySasToken :
+                        brand.logoUrl + '?' + AZURE_CONFIG.readOnlySasToken;
+                } else {
+                    // External URL (e.g., Wikipedia) - use as-is
+                    logoUrl = brand.logoUrl;
+                }
+            } else {
+                // Relative path - append SAS token
+                logoUrl = brand.logoUrl + '?' + AZURE_CONFIG.readOnlySasToken;
+            }
+        } else {
+            logoUrl = 'https://via.placeholder.com/80?text=' + encodeURIComponent(brand.name);
+        }
+        
+        return `
+        <div class="brand-card" data-brand="${brand.name}">
+            <img class="brand-logo" src="${logoUrl}" alt="${brand.name}" onerror="this.src='https://via.placeholder.com/80?text=${encodeURIComponent(brand.name)}'">
+            <div class="brand-name">${brand.name}</div>
+        </div>
+        `;
+    }).join('');
+
+    // Click brand to filter
+    document.querySelectorAll('.brand-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const brandName = card.dataset.brand;
+            document.getElementById('brandFilter').value = brandName;
+            document.getElementById('brandFilter').dispatchEvent(new Event('change'));
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+}
+
+function displayProducts(products) {
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+
+    if (products.length === 0) {
+        productsGrid.innerHTML = '<p class="no-products">No products found</p>';
+        return;
+    }
+
+    productsGrid.innerHTML = products.map(product => {
+        let imageUrl = '';
+        // Check both image and imageUrl for backward compatibility
+        const productImage = product.image || product.imageUrl;
+        if (productImage) {
+            // Check if external URL or blob storage URL
+            if (productImage.startsWith('http://') || productImage.startsWith('https://')) {
+                if (productImage.includes('blob.core.windows.net')) {
+                    // Azure blob URL - append SAS token
+                    imageUrl = productImage + '?' + AZURE_CONFIG.readOnlySasToken;
+                } else {
+                    // External URL - use as-is
+                    imageUrl = productImage;
+                }
+            } else {
+                // Relative path - append SAS token
+                imageUrl = productImage + '?' + AZURE_CONFIG.readOnlySasToken;
+            }
+        } else {
+            imageUrl = 'https://via.placeholder.com/300?text=' + encodeURIComponent(product.name);
+        }
+        
+        return `
+        <div class="product-card" data-category="${product.category}" data-brand="${product.brand}">
+            <div class="product-image">
+                <img src="${imageUrl}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300?text=${encodeURIComponent(product.name)}'">
+                ${product.brand ? `<div class="product-brand">${product.brand}</div>` : ''}
+            </div>
+            <div class="product-info">
+                <div class="product-category">${product.category || ''}</div>
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-description">${product.description || ''}</p>
+                <div class="product-footer">
+                    <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
+                    <button class="add-to-cart" data-product='${JSON.stringify(product)}'>Add to Cart</button>
+                </div>
+            </div>
+        </div>
+        `;
+    }).join('');
+    
+    // Add click handlers for add to cart buttons
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const product = JSON.parse(e.target.dataset.product);
+            if (window.cart) {
+                window.cart.addItem(product);
+            }
+        });
+    });
+}
+
+function populateFilters(products) {
+    // Populate category filter
+    const categories = [...new Set(products.map(p => p.category))].filter(Boolean).sort();
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) {
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categoryFilter.appendChild(option);
+        });
+    }
+
+    // Populate brand filter
+    const brands = [...new Set(products.map(p => p.brand))].filter(Boolean).sort();
+    const brandFilter = document.getElementById('brandFilter');
+    if (brandFilter) {
+        brands.forEach(brand => {
+            const option = document.createElement('option');
+            option.value = brand;
+            option.textContent = brand;
+            brandFilter.appendChild(option);
+        });
+    }
+}
+
+function setupFiltering(products) {
+    const categoryFilter = document.getElementById('categoryFilter');
+    const brandFilter = document.getElementById('brandFilter');
+    const searchInput = document.getElementById('searchInput');
+
+    function applyFilters() {
+        const category = categoryFilter?.value || '';
+        const brand = brandFilter?.value || '';
+        const search = searchInput?.value.toLowerCase() || '';
+
+        const filtered = products.filter(product => {
+            const matchesCategory = !category || product.category === category;
+            const matchesBrand = !brand || product.brand === brand;
+            const matchesSearch = !search || 
+                product.name.toLowerCase().includes(search) ||
+                (product.description && product.description.toLowerCase().includes(search));
+
+            return matchesCategory && matchesBrand && matchesSearch;
+        });
+
+        displayProducts(filtered);
+
+        const resultsCount = document.getElementById('resultsCount');
+        if (resultsCount) {
+            resultsCount.textContent = `Showing ${filtered.length} of ${products.length} products`;
+        }
+    }
+
+    categoryFilter?.addEventListener('change', applyFilters);
+    brandFilter?.addEventListener('change', applyFilters);
+    searchInput?.addEventListener('input', applyFilters);
+}
+
+// Cart functionality handled by cart.js and event listeners above
+
+// Initialize when page loads
+window.cart = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    window.cart = new ShoppingCart();
+    initProductsWithBrands();
+    setupCartToggle();
+});
+
+function setupCartToggle() {
+    const cartBtn = document.getElementById('cartBtn');
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartOverlay = document.getElementById('cartOverlay');
+    const closeCart = document.getElementById('closeCart');
+
+    cartBtn?.addEventListener('click', () => {
+        cartSidebar.classList.add('active');
+        cartOverlay.classList.add('active');
+    });
+
+    closeCart?.addEventListener('click', () => {
+        cartSidebar.classList.remove('active');
+        cartOverlay.classList.remove('active');
+    });
+
+    cartOverlay?.addEventListener('click', () => {
+        cartSidebar.classList.remove('active');
+        cartOverlay.classList.remove('active');
+    });
+}

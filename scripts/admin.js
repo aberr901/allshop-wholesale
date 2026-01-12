@@ -8,22 +8,29 @@ class AdminManager {
     }
 
     async init() {
+        console.log('[AdminManager] Starting initialization...');
         try {
             // Initialize authentication
+            console.log('[AdminManager] Initializing authentication...');
             const isAuth = await authService.initialize();
+            console.log('[AdminManager] Authentication result:', isAuth);
             
             if (!isAuth) {
                 // Not authenticated, trigger automatic sign-in
+                console.log('[AdminManager] Not authenticated, showing login message...');
                 this.showLoginMessage();
                 authService.signInRedirect();
                 return;
             }
             
             // Get access token for storage operations
+            console.log('[AdminManager] Getting storage access token...');
             this.accessToken = await authService.getStorageAccessToken();
+            console.log('[AdminManager] Access token obtained:', this.accessToken ? 'YES' : 'NO');
             
             if (!this.accessToken) {
                 // Token acquisition triggered redirect, wait for it
+                console.log('[AdminManager] Waiting for token redirect...');
                 return;
             }
             
@@ -35,13 +42,18 @@ class AdminManager {
             if (userEmail && user) {
                 userEmail.textContent = user.username || user.name;
             }
+            console.log('[AdminManager] User:', user?.username || user?.name);
             
+            console.log('[AdminManager] Loading products...');
             await this.loadProducts();
+            console.log('[AdminManager] Products loaded:', this.products.length);
+            
             this.setupEventListeners();
             this.displayProductsTable();
+            console.log('[AdminManager] Initialization complete!');
             
         } catch (error) {
-            console.error('Initialization error:', error);
+            console.error('[AdminManager] Initialization error:', error);
             this.showError('Failed to initialize. Please refresh the page.');
         }
     }
@@ -75,7 +87,24 @@ class AdminManager {
         const cancelBtn = document.getElementById('cancelBtn');
         const searchInput = document.getElementById('adminSearchInput');
         const imageInput = document.getElementById('productImage');
+        const imageUrlInput = document.getElementById('productImageUrl');
         const logoutBtn = document.getElementById('logoutBtn');
+        
+        // Image type toggle
+        const imageTypeRadios = document.querySelectorAll('input[name="imageType"]');
+        imageTypeRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const uploadSection = document.getElementById('uploadImageSection');
+                const urlSection = document.getElementById('urlImageSection');
+                if (e.target.value === 'upload') {
+                    uploadSection.style.display = 'block';
+                    urlSection.style.display = 'none';
+                } else {
+                    uploadSection.style.display = 'none';
+                    urlSection.style.display = 'block';
+                }
+            });
+        });
 
         if (form) form.addEventListener('submit', (e) => this.handleSubmit(e));
         if (cancelBtn) cancelBtn.addEventListener('click', () => this.resetForm());
@@ -88,10 +117,18 @@ class AdminManager {
         if (imageInput) {
             imageInput.addEventListener('change', (e) => this.previewImage(e));
         }
+        
+        if (imageUrlInput) {
+            imageUrlInput.addEventListener('input', (e) => this.previewImageUrl(e));
+        }
+        
+        if (imageUrlInput) {
+            imageUrlInput.addEventListener('input', (e) => this.previewImageUrl(e));
+        }
     }
 
-    previewImage(event) {
-        const file = event.target.files[0];
+    previewImage(e) {
+        const file = e.target.files[0];
         const preview = document.getElementById('imagePreview');
         
         if (file) {
@@ -100,6 +137,17 @@ class AdminManager {
                 preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
             };
             reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = '';
+        }
+    }
+
+    previewImageUrl(e) {
+        const url = e.target.value;
+        const preview = document.getElementById('imagePreview');
+        
+        if (url) {
+            preview.innerHTML = `<img src="${url}" alt="Preview" onerror="this.src='https://via.placeholder.com/200?text=Invalid+URL'">`;
         } else {
             preview.innerHTML = '';
         }
@@ -124,9 +172,29 @@ class AdminManager {
                 image: null
             };
 
-            // Handle image upload
+            // Handle image - check if URL or file upload
+            const imageType = document.querySelector('input[name="imageType"]:checked').value;
+            const imageUrl = document.getElementById('productImageUrl').value;
             const imageFile = document.getElementById('productImage').files[0];
-            if (imageFile) {
+            
+            if (imageType === 'url' && imageUrl) {
+                // Using external URL - just save the URL
+                // Delete old image if it was an uploaded file
+                if (this.currentEditingId) {
+                    const existingProduct = this.products.find(p => p.id === this.currentEditingId);
+                    if (existingProduct?.image && this.isAzureBlobUrl(existingProduct.image)) {
+                        await storageService.deleteImage(existingProduct.image);
+                    }
+                }
+                formData.image = imageUrl;
+            } else if (imageType === 'upload' && imageFile) {
+                // Uploading new file - delete old uploaded file if exists
+                if (this.currentEditingId) {
+                    const existingProduct = this.products.find(p => p.id === this.currentEditingId);
+                    if (existingProduct?.image && this.isAzureBlobUrl(existingProduct.image)) {
+                        await storageService.deleteImage(existingProduct.image);
+                    }
+                }
                 formData.image = await storageService.uploadImage(imageFile, this.accessToken);
             } else if (this.currentEditingId) {
                 // Keep existing image if editing and no new image selected
@@ -144,8 +212,9 @@ class AdminManager {
                 this.products.push(formData);
             }
 
-            // Save to storage
-            await storageService.saveProducts(this.products);
+            // Save to storage - get fresh token
+            const token = await authService.getStorageAccessToken();
+            await storageService.saveProducts(this.products, token);
 
             this.showNotification(
                 this.currentEditingId ? 'Product updated successfully!' : 'Product added successfully!',
@@ -179,6 +248,15 @@ class AdminManager {
         
         // Show image preview if exists
         if (product.image) {
+            // Determine if URL or uploaded file
+            if (this.isAzureBlobUrl(product.image)) {
+                document.querySelector('input[name="imageType"][value="upload"]').checked = true;
+            } else {
+                document.querySelector('input[name="imageType"][value="url"]').checked = true;
+                document.getElementById('productImageUrl').value = product.image;
+                document.getElementById('uploadImageSection').style.display = 'none';
+                document.getElementById('urlImageSection').style.display = 'block';
+            }
             document.getElementById('imagePreview').innerHTML = 
                 `<img src="${storageService.getImageUrl(product.image)}" alt="Current image">`;
         }
@@ -190,15 +268,17 @@ class AdminManager {
     }
 
     async deleteProduct(productId) {
-        if (!confirm('Are you sure you want to delete this product?')) {
+        const product = this.products.find(p => p.id === productId);
+        const productName = product ? product.name : 'this product';
+        
+        if (!confirm(`Are you sure you want to delete "${productName}"?\n\nThis action cannot be undone.`)) {
             return;
         }
 
         try {
-            const product = this.products.find(p => p.id === productId);
             
-            // Delete image from storage if exists
-            if (product?.image) {
+            // Delete image from storage if exists and is Azure Blob
+            if (product?.image && this.isAzureBlobUrl(product.image)) {
                 await storageService.deleteImage(product.image);
             }
 
@@ -258,8 +338,8 @@ class AdminManager {
                 <td>${product.stock}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-edit" onclick="adminManager.editProduct('${product.id}')">Edit</button>
-                        <button class="btn-delete" onclick="adminManager.deleteProduct('${product.id}')">Delete</button>
+                        <button class="btn-edit" onclick="adminManager.editProduct('${product.id}')" title="Edit product">Edit</button>
+                        <button class="btn-delete" onclick="adminManager.deleteProduct('${product.id}')" title="Delete product">Delete</button>
                     </div>
                 </td>
             </tr>
@@ -282,10 +362,72 @@ class AdminManager {
             notification.remove();
         }, 4000);
     }
+    
+    isAzureBlobUrl(url) {
+        return url && url.includes(AZURE_CONFIG.storageAccountName) && url.includes('blob.core.windows.net');
+    }
 }
 
 // Initialize admin manager when page loads
 let adminManager;
-document.addEventListener('DOMContentLoaded', () => {
+let brandManager;
+let categoryManager;
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Setup tabs immediately
+    setupTabs();
+    
+    // Initialize admin manager (handles products and its own auth)
     adminManager = new AdminManager();
+    
+    // Wait for auth to be ready then initialize brand and category managers
+    const waitForAuth = setInterval(async () => {
+        if (typeof authService !== 'undefined' && authService && authService.currentAccount) {
+            clearInterval(waitForAuth);
+            
+            try {
+                brandManager = new BrandManager(authService);
+                await brandManager.loadBrands();
+                brandManager.setupBrandEventListeners();
+                
+                categoryManager = new CategoryManager(authService);
+                await categoryManager.init();
+                
+                console.log('Brand and category managers initialized successfully');
+            } catch (error) {
+                console.error('Error initializing brand/category managers:', error);
+            }
+        }
+    }, 500);
+    
+    // Safety timeout - stop waiting after 10 seconds
+    setTimeout(() => {
+        clearInterval(waitForAuth);
+        if (!brandManager || !categoryManager) {
+            console.error('Brand/Category managers failed to initialize - auth timeout');
+        }
+    }, 10000);
 });
+
+// Tab switching functionality
+function setupTabs() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabName = btn.dataset.tab;
+
+            // Remove active class from all
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            // Add active to clicked
+            btn.classList.add('active');
+            const tabContent = document.getElementById(tabName + '-tab');
+            if (tabContent) {
+                tabContent.classList.add('active');
+            }
+        });
+    });
+}

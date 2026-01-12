@@ -2,31 +2,176 @@
 class StorageService {
     constructor() {
         this.productsFileName = 'products.json';
+        this.brandsFileName = 'brands.json';
+        this.categoriesFileName = 'categories.json';
+    }
+
+    /**
+     * Fetch all categories from Azure Blob Storage
+     */
+    async fetchCategories() {
+        try {
+            const url = AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.dataContainerName, this.categoriesFileName);
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                if (response.status === 404) {
+                    console.log('Categories file not found, returning default categories');
+                    return this.getDefaultCategories();
+                }
+                throw new Error('Failed to fetch categories: ' + response.statusText);
+            }
+            
+            const categories = await response.json();
+            return categories.length > 0 ? categories : this.getDefaultCategories();
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+            const cached = localStorage.getItem('categories');
+            return cached ? JSON.parse(cached) : this.getDefaultCategories();
+        }
+    }
+
+    /**
+     * Save categories to Azure Blob Storage
+     */
+    async saveCategories(categories, accessToken = null) {
+        try {
+            localStorage.setItem('categories', JSON.stringify(categories));
+            
+            const url = AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.dataContainerName, this.categoriesFileName, true);
+            
+            const headers = {
+                'Content-Type': 'application/json',
+                'x-ms-blob-type': 'BlockBlob',
+                'x-ms-version': '2021-08-06'
+            };
+            
+            if (accessToken) {
+                headers['Authorization'] = 'Bearer ' + accessToken;
+            }
+            
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(categories)
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to save categories: ' + response.statusText);
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('Error saving categories:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Get default categories
+     */
+    getDefaultCategories() {
+        return [
+            { id: 'cat_1', name: 'Electronics' },
+            { id: 'cat_2', name: 'Clothing' },
+            { id: 'cat_3', name: 'Home & Kitchen' },
+            { id: 'cat_4', name: 'Sports & Outdoors' },
+            { id: 'cat_5', name: 'Toys & Games' }
+        ];
+    }
+
+    /**
+     * Fetch all brands from Azure Blob Storage
+     */
+    async fetchBrands() {
+        try {
+            const url = AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.dataContainerName, this.brandsFileName);
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                if (response.status === 404) {
+                    console.log('Brands file not found, returning empty array');
+                    return [];
+                }
+                throw new Error(`Failed to fetch brands: ${response.statusText}`);
+            }
+            
+            const brands = await response.json();
+            return brands;
+        } catch (error) {
+            console.error('Error fetching brands:', error);
+            const cached = localStorage.getItem('brands');
+            return cached ? JSON.parse(cached) : [];
+        }
+    }
+
+    /**
+     * Save brands to Azure Blob Storage
+     */
+    async saveBrands(brands, accessToken = null) {
+        try {
+            localStorage.setItem('brands', JSON.stringify(brands));
+            
+            const url = AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.dataContainerName, this.brandsFileName, true);
+            
+            const headers = {
+                'Content-Type': 'application/json',
+                'x-ms-blob-type': 'BlockBlob',
+                'x-ms-version': '2021-08-06'
+            };
+            
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            }
+            
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(brands)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Failed to save brands: ${response.statusText}`);
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('Error saving brands:', error);
+            throw error;
+        }
     }
 
     /**
      * Fetch all products from Azure Blob Storage
      */
     async fetchProducts() {
+        console.log('[Storage] Fetching products...');
         try {
             const url = AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.dataContainerName, this.productsFileName);
+            console.log('[Storage] Products URL:', url);
             const response = await fetch(url);
+            console.log('[Storage] Products response status:', response.status);
             
             if (!response.ok) {
                 // If file doesn't exist, return empty array
                 if (response.status === 404) {
-                    console.log('Products file not found, returning empty array');
+                    console.log('[Storage] Products file not found, returning empty array');
                     return [];
                 }
+                console.error('[Storage] Failed to fetch products:', response.statusText);
                 throw new Error(`Failed to fetch products: ${response.statusText}`);
             }
             
             const products = await response.json();
+            console.log('[Storage] Products fetched successfully:', products.length, 'items');
             return products;
         } catch (error) {
-            console.error('Error fetching products:', error);
+            console.error('[Storage] Error fetching products:', error);
             // Return cached products if available
             const cached = localStorage.getItem(STORAGE_KEYS.products);
+            if (cached) {
+                console.log('[Storage] Using cached products');
+            }
             return cached ? JSON.parse(cached) : [];
         }
     }
