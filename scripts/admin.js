@@ -9,6 +9,8 @@ class AdminManager {
 
     async init() {
         console.log('[AdminManager] Starting initialization...');
+        console.log('[AdminManager] Current URL:', window.location.href);
+        
         try {
             // Initialize authentication
             console.log('[AdminManager] Initializing authentication...');
@@ -19,7 +21,19 @@ class AdminManager {
                 // Not authenticated, trigger automatic sign-in
                 console.log('[AdminManager] Not authenticated, showing login message...');
                 this.showLoginMessage();
-                authService.signInRedirect();
+                
+                // Prevent infinite redirect loop - check if we just came back from login
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('code') || urlParams.has('error')) {
+                    console.error('[AdminManager] Auth callback detected but authentication failed');
+                    this.showError('Authentication failed. Please try again or check browser console for details.');
+                    return;
+                }
+                
+                console.log('[AdminManager] Redirecting to sign in...');
+                setTimeout(() => {
+                    authService.signInRedirect();
+                }, 1000);
                 return;
             }
             
@@ -54,7 +68,21 @@ class AdminManager {
             
         } catch (error) {
             console.error('[AdminManager] Initialization error:', error);
-            this.showError('Failed to initialize. Please refresh the page.');
+            this.showError('Failed to initialize: ' + error.message);
+        }
+    }
+
+    showError(message) {
+        const container = document.querySelector('.admin-layout');
+        if (container) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <h2 style="color: #dc2626;">Error</h2>
+                    <p style="margin: 1rem 0; color: #666;">${message}</p>
+                    <button onclick="window.location.reload()" class="btn btn-primary">Retry</button>
+                    <button onclick="authService.signOut()" class="btn btn-secondary">Sign Out</button>
+                </div>
+            `;
         }
     }
 
