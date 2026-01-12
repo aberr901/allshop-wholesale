@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Shop Wholesale - Premium Wholesale Products for Retailers & Businesses</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/animations.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -223,10 +224,30 @@
             if (googleBtn) {
                 googleBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    alert('🎉 Sign in successful! (This is a demo)\n\nYour order details:\n' + 
+                    
+                    // Prepare order details email
+                    const orderItems = cart.items.map(item => 
+                        `- ${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`
+                    ).join('\n');
+                    
+                    const mailtoLink = `mailto:info@allshopwholesale.com?subject=${encodeURIComponent('New Wholesale Order Request')}&body=${encodeURIComponent(
+                        'NEW ORDER REQUEST\n\n' +
+                        'Customer signed in via Google\n\n' +
+                        'ORDER DETAILS:\n' +
+                        orderItems + '\n\n' +
+                        `Total Items: ${cart.items.length}\n` +
+                        `Total Amount: $${cart.getTotal().toFixed(2)}\n\n` +
+                        'Please contact the customer to complete this order.'
+                    )}`;
+                    
+                    // Open mailto
+                    window.location.href = mailtoLink;
+                    
+                    alert('🎉 Sign in successful! (This is a demo)\n\n' + 
+                          'Your order details:\n' + 
                           `Items: ${cart.items.length}\n` +
                           `Total: $${cart.getTotal().toFixed(2)}\n\n` +
-                          'An email confirmation will be sent to you shortly.');
+                          'Your order request is being prepared in your email client.\nPlease click Send to submit your wholesale order request.');
                     loginModal.classList.remove('active');
                     cart.items = [];
                     cart.saveCart();
@@ -238,11 +259,30 @@
                 loginForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const email = document.getElementById('loginEmail').value;
+                    
+                    // Prepare order details email
+                    const orderItems = cart.items.map(item => 
+                        `- ${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`
+                    ).join('\n');
+                    
+                    const mailtoLink = `mailto:info@allshopwholesale.com?subject=${encodeURIComponent('New Wholesale Order Request')}&body=${encodeURIComponent(
+                        'NEW ORDER REQUEST\n\n' +
+                        `Customer Email: ${email}\n\n` +
+                        'ORDER DETAILS:\n' +
+                        orderItems + '\n\n' +
+                        `Total Items: ${cart.items.length}\n` +
+                        `Total Amount: $${cart.getTotal().toFixed(2)}\n\n` +
+                        'Please contact the customer to complete this order.'
+                    )}`;
+                    
+                    // Open mailto
+                    window.location.href = mailtoLink;
+                    
                     alert('🎉 Sign in successful! (This is a demo)\n\n' +
                           `Email: ${email}\n` +
                           `Items: ${cart.items.length}\n` +
                           `Total: $${cart.getTotal().toFixed(2)}\n\n` +
-                          'An email confirmation will be sent to you shortly.');
+                          'Your order request is being prepared in your email client.\nPlease click Send to submit your wholesale order request.');
                     loginModal.classList.remove('active');
                     loginForm.reset();
                     cart.items = [];
