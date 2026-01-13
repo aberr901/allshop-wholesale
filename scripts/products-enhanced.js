@@ -218,12 +218,12 @@ function displayProducts(products) {
             
             // Check stock availability
             if (product.stock === 0) {
-                alert('❌ This product is currently out of stock.');
+                notify.error('This product is currently out of stock.');
                 return;
             }
             
             if (quantity > product.stock) {
-                alert(`❌ Only ${product.stock} units available in stock.\nPlease adjust the quantity.`);
+                notify.warning(`Only ${product.stock} units available in stock. Please adjust the quantity.`);
                 document.getElementById(`qty-${product.id}`).value = product.stock;
                 return;
             }

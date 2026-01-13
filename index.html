@@ -21,7 +21,12 @@
                         <p class="brand-tagline">Wholesale Solutions for Your Business</p>
                     </a>
                 </div>
-                <div class="nav-menu">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu" id="navMenu">
                     <a href="index.html" class="nav-link">Home</a>
                     
                     <div class="nav-dropdown">
@@ -239,7 +244,7 @@
             if (googleBtn) {
                 googleBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    alert('❌ Sign in failed\n\nNo account found with this Google account.\n\nPlease register for a wholesale account first.');
+                    notify.error('No account found with this Google account. Please register for a wholesale account first.');
                     // Show create account message
                     document.querySelector('.login-footer').style.display = 'block';
                 });
@@ -250,7 +255,7 @@
                 loginForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const email = document.getElementById('loginEmail').value;
-                    alert('❌ Sign in failed\n\nNo account found for: ' + email + '\n\nPlease register for a wholesale account first.');
+                    notify.error('No account found for: ' + email + '. Please register for a wholesale account first.');
                     // Show create account message
                     document.querySelector('.login-footer').style.display = 'block';
                     loginForm.reset();
@@ -261,13 +266,48 @@
             if (createAccountLink) {
                 createAccountLink.addEventListener('click', (e) => {
                     e.preventDefault();
-                    alert('📧 Account Registration\n\nTo create a wholesale account, please contact us:\n\n' +
-                          'Email: info@allshopwholesale.com\n' +
-                          'Phone: 0050946820\n\n' +
-                          'Our team will set up your account and provide login credentials.');
+                    notify.info('To create a wholesale account, please contact us at info@allshopwholesale.com or call 0050946820. Our team will set up your account and provide login credentials.', 6000);
                 });
             }
         });
     </script>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>All Shop Wholesale</h3>
+                    <p>Your trusted partner in premium wholesale products for businesses across Romania and Europe.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="admin.html">Admin</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>📧 info@allshopwholesale.com</li>
+                        <li>📞 0050946820</li>
+                        <li>📍 București, România</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li>VAT: RO50946820</li>
+                        <li>All Shop Wholesale SRL</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 All Shop Wholesale SRL. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
