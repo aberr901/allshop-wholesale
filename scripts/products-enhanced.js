@@ -166,8 +166,8 @@ function displayProducts(products) {
 
     productsGrid.innerHTML = products.map(product => {
         let imageUrl = '';
-        // Check both image and imageUrl for backward compatibility
-        const productImage = product.image || product.imageUrl;
+        // Check both imageUrl and image for backward compatibility
+        const productImage = product.imageUrl || product.image;
         if (productImage) {
             // Check if external URL or blob storage URL
             if (productImage.startsWith('http://') || productImage.startsWith('https://')) {

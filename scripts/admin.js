@@ -197,7 +197,7 @@ class AdminManager {
                 description: document.getElementById('productDescription').value,
                 price: parseFloat(document.getElementById('productPrice').value),
                 stock: parseInt(document.getElementById('productStock').value),
-                image: null
+                imageUrl: null
             };
 
             // Handle image - check if URL or file upload
@@ -210,25 +210,28 @@ class AdminManager {
                 // Delete old image if it was an uploaded file
                 if (this.currentEditingId) {
                     const existingProduct = this.products.find(p => p.id === this.currentEditingId);
-                    if (existingProduct?.image && this.isAzureBlobUrl(existingProduct.image)) {
-                        await storageService.deleteImage(existingProduct.image);
+                    const existingImage = existingProduct?.imageUrl || existingProduct?.image;
+                    if (existingImage && this.isAzureBlobUrl(existingImage)) {
+                        await storageService.deleteImage(existingImage);
                     }
                 }
-                formData.image = imageUrl;
+                formData.imageUrl = imageUrl;
             } else if (imageType === 'upload' && imageFile) {
                 // Uploading new file - delete old uploaded file if exists
                 if (this.currentEditingId) {
                     const existingProduct = this.products.find(p => p.id === this.currentEditingId);
-                    if (existingProduct?.image && this.isAzureBlobUrl(existingProduct.image)) {
-                        await storageService.deleteImage(existingProduct.image);
+                    const existingImage = existingProduct?.imageUrl || existingProduct?.image;
+                    if (existingImage && this.isAzureBlobUrl(existingImage)) {
+                        await storageService.deleteImage(existingImage);
                     }
                 }
-                formData.image = await storageService.uploadImage(imageFile, this.accessToken);
+                formData.imageUrl = await storageService.uploadImage(imageFile, this.accessToken);
             } else if (this.currentEditingId) {
                 // Keep existing image if editing and no new image selected
                 const existingProduct = this.products.find(p => p.id === this.currentEditingId);
-                formData.image = existingProduct?.image;
+                formData.imageUrl = existingProduct?.imageUrl || existingProduct?.image || null;
             }
+            // If no image provided for new product, imageUrl stays null (which is acceptable)
 
             // Update or add product
             if (this.currentEditingId) {
@@ -289,19 +292,27 @@ class AdminManager {
         document.getElementById('productStock').value = product.stock;
         
         // Show image preview if exists
-        if (product.image) {
+        const productImage = product.imageUrl || product.image;
+        if (productImage) {
             // Determine if URL or uploaded file
-            if (this.isAzureBlobUrl(product.image)) {
+            if (this.isAzureBlobUrl(productImage)) {
                 document.querySelector('input[name="imageType"][value="upload"]').checked = true;
+                document.getElementById('uploadImageSection').style.display = 'block';
+                document.getElementById('urlImageSection').style.display = 'none';
             } else {
                 document.querySelector('input[name="imageType"][value="url"]').checked = true;
-                document.getElementById('productImageUrl').value = product.imageUrl || product.image || '';
+                document.getElementById('productImageUrl').value = productImage;
                 document.getElementById('uploadImageSection').style.display = 'none';
                 document.getElementById('urlImageSection').style.display = 'block';
             }
-            const imageUrl = product.imageUrl || product.image;
-            document.getElementById('imagePreview').innerHTML = imageUrl ?
-                `<img src="${storageService.getImageUrl(imageUrl)}" alt="Current image">` : '';
+            document.getElementById('imagePreview').innerHTML = 
+                `<img src="${storageService.getImageUrl(productImage)}" alt="Current image">`;
+        } else {
+            // No image - default to URL input
+            document.querySelector('input[name="imageType"][value="url"]').checked = true;
+            document.getElementById('uploadImageSection').style.display = 'none';
+            document.getElementById('urlImageSection').style.display = 'block';
+            document.getElementById('imagePreview').innerHTML = '';
         }
 
         document.getElementById('formTitle').textContent = 'Edit Product';
