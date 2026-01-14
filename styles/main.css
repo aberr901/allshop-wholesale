@@ -1014,13 +1014,28 @@ img {
         width: 100%;
     }
     
-    .dropdown-menu {
+    .nav-dropdown .dropdown-menu {
         position: static;
         opacity: 1;
         visibility: visible;
         box-shadow: none;
+        transform: none;
         margin-top: 0.5rem;
         margin-left: 1rem;
+        padding: 0.5rem 0;
+        background: transparent;
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .nav-dropdown:hover .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .brands-dropdown {
+        display: block;
+        grid-template-columns: 1fr;
     }
     
     .nav-actions {
