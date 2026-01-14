@@ -123,6 +123,20 @@ class CategoryManager {
         const category = this.categories.find(c => c.id === categoryId);
         const categoryName = category ? category.name : 'this category';
         
+        // Check if any products use this category
+        const products = await storageService.fetchProducts();
+        const relatedProducts = products.filter(p => 
+            p.categoryId === categoryId || p.category === categoryName
+        );
+        
+        if (relatedProducts.length > 0) {
+            this.showNotification(
+                `Cannot delete "${categoryName}" because ${relatedProducts.length} product(s) are using it. Please reassign or delete those products first.`,
+                'error'
+            );
+            return;
+        }
+        
         if (!confirm('Are you sure you want to delete "' + categoryName + '"?\n\nThis action cannot be undone.')) return;
 
         try {

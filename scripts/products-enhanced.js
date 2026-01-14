@@ -31,7 +31,7 @@ async function initProductsWithBrands() {
             displayProducts(products);
         }
         
-        populateFilters(products, categories);
+        populateFilters(products, brands, categories);
         setupFiltering(products);
     } catch (error) {
         console.error('Error initializing products:', error);
@@ -264,27 +264,35 @@ function displayProducts(products) {
     });
 }
 
-function populateFilters(products) {
-    // Populate category filter
-    const categories = [...new Set(products.map(p => p.category))].filter(Boolean).sort();
+async function populateFilters(products, allBrands, allCategories) {
+    // Populate category filter - use all categories from storage
     const categoryFilter = document.getElementById('categoryFilter');
-    if (categoryFilter) {
-        categories.forEach(category => {
+    if (categoryFilter && allCategories && allCategories.length > 0) {
+        // Clear existing options except the first "All Categories"
+        while (categoryFilter.options.length > 1) {
+            categoryFilter.remove(1);
+        }
+        
+        allCategories.forEach(category => {
             const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
+            option.value = category.name;
+            option.textContent = category.name;
             categoryFilter.appendChild(option);
         });
     }
 
-    // Populate brand filter
-    const brands = [...new Set(products.map(p => p.brand))].filter(Boolean).sort();
+    // Populate brand filter - use all brands from storage
     const brandFilter = document.getElementById('brandFilter');
-    if (brandFilter) {
-        brands.forEach(brand => {
+    if (brandFilter && allBrands && allBrands.length > 0) {
+        // Clear existing options except the first "All Brands"
+        while (brandFilter.options.length > 1) {
+            brandFilter.remove(1);
+        }
+        
+        allBrands.forEach(brand => {
             const option = document.createElement('option');
-            option.value = brand;
-            option.textContent = brand;
+            option.value = brand.name;
+            option.textContent = brand.name;
             brandFilter.appendChild(option);
         });
     }

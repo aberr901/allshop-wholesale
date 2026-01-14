@@ -223,6 +223,18 @@ class BrandManager {
         const brand = this.brands.find(b => b.id === brandId);
         const brandName = brand ? brand.name : 'this brand';
         
+        // Check if any products use this brand
+        const products = await storageService.fetchProducts();
+        const relatedProducts = products.filter(p => p.brand === brandName);
+        
+        if (relatedProducts.length > 0) {
+            this.showNotification(
+                `Cannot delete "${brandName}" because ${relatedProducts.length} product(s) are using it. Please reassign or delete those products first.`,
+                'error'
+            );
+            return;
+        }
+        
         if (!confirm(`Are you sure you want to delete "${brandName}"?\n\nThis action cannot be undone.`)) return;
 
         try {
