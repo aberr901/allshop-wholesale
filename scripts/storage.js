@@ -49,6 +49,22 @@ class StorageService {
     }
 
     /**
+     * Clear specific cache or all caches
+     */
+    clearCache(cacheKey = null) {
+        if (cacheKey) {
+            localStorage.removeItem(cacheKey);
+            console.log(`Cache cleared: ${cacheKey}`);
+        } else {
+            // Clear all caches
+            localStorage.removeItem('categories_cache');
+            localStorage.removeItem('brands_cache');
+            localStorage.removeItem('products_cache');
+            console.log('All caches cleared');
+        }
+    }
+
+    /**
      * Fetch all categories from Azure Blob Storage
      */
     async fetchCategories() {
@@ -112,6 +128,9 @@ class StorageService {
             if (!response.ok) {
                 throw new Error('Failed to save categories: ' + response.statusText);
             }
+            
+            // Clear cache to force refresh
+            this.clearCache('categories_cache');
             
             return true;
         } catch (error) {
@@ -196,6 +215,9 @@ class StorageService {
                 throw new Error(`Failed to save brands: ${response.statusText}`);
             }
             
+            // Clear cache to force refresh
+            this.clearCache('brands_cache');
+            
             return true;
         } catch (error) {
             console.error('Error saving brands:', error);
@@ -275,6 +297,9 @@ class StorageService {
             if (!response.ok) {
                 throw new Error(`Failed to save products: ${response.statusText}`);
             }
+            
+            // Clear cache to force refresh
+            this.clearCache('products_cache');
             
             return true;
         } catch (error) {
