@@ -183,6 +183,7 @@
     <script src="scripts/config.js?v=3"></script>
     <script src="scripts/storage.js?v=3"></script>
     <script src="scripts/notifications.js"></script>
+    <script src="scripts/privacy-banner.js"></script>
     <script src="scripts/cart.js?v=3"></script>
     <script src="scripts/virtual-scroller.js"></script>
     <script src="scripts/products-enhanced.js?v=3"></script>
@@ -221,7 +222,7 @@
                 checkoutBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     if (cart.items.length === 0) {
-                        alert('Your cart is empty!');
+                        notify.warning('Your cart is empty!');
                         return;
                     }
                     loginModal.classList.add('active');

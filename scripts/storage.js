@@ -4,12 +4,61 @@ class StorageService {
         this.productsFileName = 'products.json';
         this.brandsFileName = 'brands.json';
         this.categoriesFileName = 'categories.json';
+        this.CACHE_TTL = 3600000; // 1 hour in milliseconds
+    }
+
+    /**
+     * Check if cached data is still valid
+     */
+    isCacheValid(cacheKey) {
+        const cached = localStorage.getItem(cacheKey);
+        if (!cached) return false;
+        
+        try {
+            const { timestamp, ttl = this.CACHE_TTL } = JSON.parse(cached);
+            return timestamp && (Date.now() - timestamp < ttl);
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Get cached data if valid
+     */
+    getCachedData(cacheKey) {
+        if (!this.isCacheValid(cacheKey)) return null;
+        
+        try {
+            const cached = JSON.parse(localStorage.getItem(cacheKey));
+            return cached.data;
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * Set cached data with timestamp
+     */
+    setCachedData(cacheKey, data) {
+        const cacheObject = {
+            data: data,
+            timestamp: Date.now(),
+            ttl: this.CACHE_TTL
+        };
+        localStorage.setItem(cacheKey, JSON.stringify(cacheObject));
     }
 
     /**
      * Fetch all categories from Azure Blob Storage
      */
     async fetchCategories() {
+        // Check cache first
+        const cachedCategories = this.getCachedData('categories_cache');
+        if (cachedCategories) {
+            console.log('Using cached categories');
+            return cachedCategories;
+        }
+
         try {
             const url = AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.dataContainerName, this.categoriesFileName);
             const response = await fetch(url);
@@ -17,17 +66,21 @@ class StorageService {
             if (!response.ok) {
                 if (response.status === 404) {
                     console.log('Categories file not found, returning default categories');
-                    return this.getDefaultCategories();
+                    const defaults = this.getDefaultCategories();
+                    this.setCachedData('categories_cache', defaults);
+                    return defaults;
                 }
                 throw new Error('Failed to fetch categories: ' + response.statusText);
             }
             
             const categories = await response.json();
-            return categories.length > 0 ? categories : this.getDefaultCategories();
+            const result = categories.length > 0 ? categories : this.getDefaultCategories();
+            this.setCachedData('categories_cache', result);
+            return result;
         } catch (error) {
             console.error('Error fetching categories:', error);
-            const cached = localStorage.getItem('categories');
-            return cached ? JSON.parse(cached) : this.getDefaultCategories();
+            const cached = this.getCachedData('categories_cache');
+            return cached || this.getDefaultCategories();
         }
     }
 
@@ -84,6 +137,13 @@ class StorageService {
      * Fetch all brands from Azure Blob Storage
      */
     async fetchBrands() {
+        // Check cache first
+        const cachedBrands = this.getCachedData('brands_cache');
+        if (cachedBrands) {
+            console.log('Using cached brands');
+            return cachedBrands;
+        }
+
         try {
             const url = AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.dataContainerName, this.brandsFileName);
             const response = await fetch(url);
@@ -91,17 +151,19 @@ class StorageService {
             if (!response.ok) {
                 if (response.status === 404) {
                     console.log('Brands file not found, returning empty array');
+                    this.setCachedData('brands_cache', []);
                     return [];
                 }
                 throw new Error(`Failed to fetch brands: ${response.statusText}`);
             }
             
             const brands = await response.json();
+            this.setCachedData('brands_cache', brands);
             return brands;
         } catch (error) {
             console.error('Error fetching brands:', error);
-            const cached = localStorage.getItem('brands');
-            return cached ? JSON.parse(cached) : [];
+            const cached = this.getCachedData('brands_cache');
+            return cached || [];
         }
     }
 
@@ -146,6 +208,14 @@ class StorageService {
      */
     async fetchProducts() {
         console.log('[Storage] Fetching products...');
+        
+        // Check cache first
+        const cachedProducts = this.getCachedData('products_cache');
+        if (cachedProducts) {
+            console.log('[Storage] Using cached products');
+            return cachedProducts;
+        }
+
         try {
             const url = AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.dataContainerName, this.productsFileName);
             console.log('[Storage] Products URL:', url);
@@ -156,6 +226,7 @@ class StorageService {
                 // If file doesn't exist, return empty array
                 if (response.status === 404) {
                     console.log('[Storage] Products file not found, returning empty array');
+                    this.setCachedData('products_cache', []);
                     return [];
                 }
                 console.error('[Storage] Failed to fetch products:', response.statusText);
@@ -164,15 +235,12 @@ class StorageService {
             
             const products = await response.json();
             console.log('[Storage] Products fetched successfully:', products.length, 'items');
+            this.setCachedData('products_cache', products);
             return products;
         } catch (error) {
             console.error('[Storage] Error fetching products:', error);
-            // Return cached products if available
-            const cached = localStorage.getItem(STORAGE_KEYS.products);
-            if (cached) {
-                console.log('[Storage] Using cached products');
-            }
-            return cached ? JSON.parse(cached) : [];
+            const cached = this.getCachedData('products_cache');
+            return cached || [];
         }
     }
 

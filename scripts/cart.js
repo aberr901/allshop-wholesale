@@ -3,6 +3,8 @@ class ShoppingCart {
     constructor() {
         this.items = this.loadCart();
         this.initializeEventListeners();
+        // Initialize cart display on page load
+        this.updateCartDisplay();
     }
 
     loadCart() {
