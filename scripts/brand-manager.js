@@ -59,9 +59,20 @@ class BrandManager {
                 logoUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" fill="%23ddd"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23666" font-family="Arial" font-size="14">' + brand.name + '</text></svg>');
             }
             
+            // Department badges
+            let departmentBadges = '';
+            if (brand.departments && brand.departments.length > 0) {
+                departmentBadges = brand.departments.map(dept => {
+                    const color = dept === 'home-kitchen' ? '#3498db' : '#e74c3c';
+                    const label = dept === 'home-kitchen' ? 'Home & Kitchen' : 'Pet Supplies';
+                    return '<span style="display: inline-block; padding: 0.25rem 0.75rem; background: ' + color + '; color: white; border-radius: 12px; font-size: 0.75rem; margin-right: 0.5rem;">' + label + '</span>';
+                }).join('');
+            }
+            
             return '<div class="brand-card-admin">' +
                 '<img src="' + logoUrl + '" alt="' + brand.name + '" onerror="this.style.display=\'none\'">' +
                 '<h3>' + brand.name + '</h3>' +
+                '<div style="margin: 0.5rem 0;">' + departmentBadges + '</div>' +
                 '<div class="action-buttons">' +
                 '<button class="btn-edit" onclick="brandManager.editBrand(\'' + brand.id + '\')" title="Edit brand">Edit</button>' +
                 '<button class="btn-delete" onclick="brandManager.deleteBrand(\'' + brand.id + '\')" title="Delete brand">Delete</button>' +
@@ -146,10 +157,20 @@ class BrandManager {
                 finalLogoUrl = existingBrand ? existingBrand.logoUrl : null;
             }
 
+            // Get selected departments
+            const departmentCheckboxes = document.querySelectorAll('input[name="brandDepartments"]:checked');
+            const departments = Array.from(departmentCheckboxes).map(cb => cb.value);
+
+            if (departments.length === 0) {
+                this.showNotification('Please select at least one department for this brand.', 'error');
+                return;
+            }
+
             const brandData = {
                 id: this.currentEditingBrandId || this.generateBrandId(),
                 name: brandName,
-                logoUrl: finalLogoUrl
+                logoUrl: finalLogoUrl,
+                departments: departments
             };
 
             // Update or add brand
@@ -214,6 +235,12 @@ class BrandManager {
             }
             preview.innerHTML = '<img src="' + logoUrl + '" alt="' + brand.name + '" style="max-width:200px;border-radius:8px;" onerror="this.src=\'https://via.placeholder.com/200?text=' + encodeURIComponent(brand.name) + '\'">';
         }
+
+        // Set department checkboxes
+        const departmentCheckboxes = document.querySelectorAll('input[name="brandDepartments"]');
+        departmentCheckboxes.forEach(cb => {
+            cb.checked = brand.departments && brand.departments.includes(cb.value);
+        });
 
         // Scroll to form
         document.getElementById('brandForm').scrollIntoView({ behavior: 'smooth' });

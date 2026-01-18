@@ -29,9 +29,18 @@ async function initProductsWithBrands(department = null) {
             products = products.filter(p => categoryIds.includes(p.categoryId));
         }
         
-        // Filter brands to show only those with products in this department
-        const productBrandNames = [...new Set(products.map(p => p.brand).filter(Boolean))];
-        const filteredBrands = brands.filter(brand => productBrandNames.includes(brand.name));
+        // Filter brands - check both products and brand's departments array
+        let filteredBrands = brands;
+        if (department) {
+            // Include brands that either:
+            // 1. Have products in this department, OR
+            // 2. Have this department in their departments array
+            const productBrandNames = [...new Set(products.map(p => p.brand).filter(Boolean))];
+            filteredBrands = brands.filter(brand => 
+                productBrandNames.includes(brand.name) || 
+                (brand.departments && brand.departments.includes(department))
+            );
+        }
         
         displayBrands(filteredBrands);
         populateNavigationDropdowns(filteredBrands, filteredCategories);

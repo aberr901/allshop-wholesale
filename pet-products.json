@@ -1,0 +1,189 @@
+[
+  {
+    "id": "pet_001",
+    "name": "Purina Pro Plan Adult Dog Food",
+    "category": "Pet Food",
+    "categoryId": "cat_007",
+    "brand": "Purina",
+    "price": 45.99,
+    "stock": 150,
+    "imageUrl": "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400&h=400&fit=crop",
+    "description": "High-quality protein-rich dog food for adult dogs, 15kg bag"
+  },
+  {
+    "id": "pet_002",
+    "name": "Royal Canin Kitten Food",
+    "category": "Pet Food",
+    "categoryId": "cat_007",
+    "brand": "Royal Canin",
+    "price": 38.50,
+    "stock": 120,
+    "imageUrl": "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=400&h=400&fit=crop",
+    "description": "Specially formulated nutrition for kittens 0-12 months, 10kg"
+  },
+  {
+    "id": "pet_003",
+    "name": "Pedigree Adult Complete Dry Food",
+    "category": "Pet Food",
+    "categoryId": "cat_007",
+    "brand": "Pedigree",
+    "price": 32.99,
+    "stock": 200,
+    "imageUrl": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=400&fit=crop",
+    "description": "Complete and balanced nutrition for adult dogs, 20kg bag"
+  },
+  {
+    "id": "pet_004",
+    "name": "Whiskas Cat Food Variety Pack",
+    "category": "Pet Food",
+    "categoryId": "cat_007",
+    "brand": "Whiskas",
+    "price": 24.99,
+    "stock": 180,
+    "imageUrl": "https://images.unsplash.com/photo-1611003228941-98852ba62227?w=400&h=400&fit=crop",
+    "description": "Wet cat food variety pack, 24 pouches x 100g"
+  },
+  {
+    "id": "pet_005",
+    "name": "KONG Classic Dog Toy",
+    "category": "Pet Toys",
+    "categoryId": "cat_008",
+    "brand": "KONG",
+    "price": 12.99,
+    "stock": 300,
+    "imageUrl": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=400&fit=crop",
+    "description": "Durable rubber toy for dogs, perfect for chewing and treat dispensing"
+  },
+  {
+    "id": "pet_006",
+    "name": "Interactive Cat Feather Wand",
+    "category": "Pet Toys",
+    "categoryId": "cat_008",
+    "brand": "KONG",
+    "price": 8.99,
+    "stock": 250,
+    "imageUrl": "https://images.unsplash.com/photo-1573865526739-10c1de0fa4e0?w=400&h=400&fit=crop",
+    "description": "Retractable wand with colorful feathers to engage your cat"
+  },
+  {
+    "id": "pet_007",
+    "name": "Rope Tug Toy for Dogs",
+    "category": "Pet Toys",
+    "categoryId": "cat_008",
+    "brand": "KONG",
+    "price": 9.99,
+    "stock": 220,
+    "imageUrl": "https://images.unsplash.com/photo-1561212044-bac5ef688a07?w=400&h=400&fit=crop",
+    "description": "Heavy-duty rope toy for tug-of-war and dental health"
+  },
+  {
+    "id": "pet_008",
+    "name": "Catnip Filled Mice Toys (6-pack)",
+    "category": "Pet Toys",
+    "categoryId": "cat_008",
+    "brand": "Whiskas",
+    "price": 7.50,
+    "stock": 280,
+    "imageUrl": "https://images.unsplash.com/photo-1611915387288-fd8d2f5f928b?w=400&h=400&fit=crop",
+    "description": "Soft plush mice filled with premium catnip"
+  },
+  {
+    "id": "pet_009",
+    "name": "Adjustable Dog Collar",
+    "category": "Pet Accessories",
+    "categoryId": "cat_009",
+    "brand": "Pedigree",
+    "price": 14.99,
+    "stock": 160,
+    "imageUrl": "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?w=400&h=400&fit=crop",
+    "description": "Durable nylon collar with quick-release buckle, adjustable 30-50cm"
+  },
+  {
+    "id": "pet_010",
+    "name": "Retractable Dog Leash",
+    "category": "Pet Accessories",
+    "categoryId": "cat_009",
+    "brand": "Pedigree",
+    "price": 22.99,
+    "stock": 140,
+    "imageUrl": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400&h=400&fit=crop",
+    "description": "5-meter retractable leash with one-button brake and lock"
+  },
+  {
+    "id": "pet_011",
+    "name": "Orthopedic Pet Bed",
+    "category": "Pet Accessories",
+    "categoryId": "cat_009",
+    "brand": "Purina",
+    "price": 49.99,
+    "stock": 80,
+    "imageUrl": "https://images.unsplash.com/photo-1591856419659-7fb1e7aa2d9f?w=400&h=400&fit=crop",
+    "description": "Memory foam pet bed with removable washable cover, large size"
+  },
+  {
+    "id": "pet_012",
+    "name": "Cat Scratching Post",
+    "category": "Pet Accessories",
+    "categoryId": "cat_009",
+    "brand": "Whiskas",
+    "price": 29.99,
+    "stock": 95,
+    "imageUrl": "https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=400&h=400&fit=crop",
+    "description": "Sisal-covered scratching post with platform, 60cm height"
+  },
+  {
+    "id": "pet_013",
+    "name": "Pet Grooming Brush",
+    "category": "Pet Health & Grooming",
+    "categoryId": "cat_010",
+    "brand": "Royal Canin",
+    "price": 11.99,
+    "stock": 210,
+    "imageUrl": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=400&fit=crop",
+    "description": "Self-cleaning slicker brush for dogs and cats"
+  },
+  {
+    "id": "pet_014",
+    "name": "Pet Nail Clippers",
+    "category": "Pet Health & Grooming",
+    "categoryId": "cat_010",
+    "brand": "Purina",
+    "price": 9.99,
+    "stock": 190,
+    "imageUrl": "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?w=400&h=400&fit=crop",
+    "description": "Professional-grade nail clippers with safety guard"
+  },
+  {
+    "id": "pet_015",
+    "name": "Pet Dental Care Kit",
+    "category": "Pet Health & Grooming",
+    "categoryId": "cat_010",
+    "brand": "Pedigree",
+    "price": 16.50,
+    "stock": 145,
+    "imageUrl": "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400&h=400&fit=crop",
+    "description": "Complete dental care kit with toothbrush, toothpaste, and finger brush"
+  },
+  {
+    "id": "pet_016",
+    "name": "Flea & Tick Collar for Dogs",
+    "category": "Pet Health & Grooming",
+    "categoryId": "cat_010",
+    "brand": "Royal Canin",
+    "price": 18.99,
+    "stock": 175,
+    "imageUrl": "https://images.unsplash.com/photo-1601758177266-bc599de87707?w=400&h=400&fit=crop",
+    "description": "8-month protection against fleas, ticks, and mosquitoes"
+  },
+  {
+    "id": "pet_017",
+    "name": "Pet Shampoo & Conditioner Set",
+    "category": "Pet Health & Grooming",
+    "categoryId": "cat_010",
+    "brand": "Whiskas",
+    "price": 13.99,
+    "stock": 165,
+    "imageUrl": "https://images.unsplash.com/photo-1625316708582-7c38734be31d?w=400&h=400&fit=crop",
+    "description": "Hypoallergenic shampoo and conditioner for sensitive skin, 500ml each"
+  }
+]
