@@ -159,13 +159,29 @@
                     <a href="pet-supplies.html" class="nav-link">Pet Supplies</a>
                     <a href="about.html" class="nav-link">About Us</a>
                     <a href="contact.html" class="nav-link">Contact</a>
+                    <div class="mobile-only-nav-actions">
+                        <button class="btn-login mobile-login-btn" id="mobileLoginBtn">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Login
+                        </button>
+                        <a href="admin.html" class="nav-link-admin" id="mobileAdminLink" style="display: none;">Admin</a>
+                        <button class="cart-btn mobile-cart-btn" id="mobileCartBtn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                            <span class="cart-count" id="mobileCartCount">0</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="nav-actions">
                     <button class="btn-login" id="navLoginBtn">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        Sign In
+                        <span>Login</span>
                     </button>
                     <a href="admin.html" class="nav-link-admin" id="adminLink" style="display: none;">Admin</a>
                     <button class="cart-btn" id="cartBtn">
@@ -348,11 +364,17 @@
             const userEmail = localStorage.getItem('userEmail');
             
             if (isAuthenticated && userEmail) {
-                if (navLoginBtn) {
-                    navLoginBtn.textContent = userEmail.split('@')[0];
+                if (navLoginBtn && navLoginBtn.querySelector('span')) {
+                    navLoginBtn.querySelector('span').textContent = userEmail.split('@')[0];
+                }
+                if (mobileLoginBtn) {
+                    mobileLoginBtn.textContent = userEmail.split('@')[0];
                 }
                 if (adminLink) {
                     adminLink.style.display = 'block';
+                }
+                if (mobileAdminLink) {
+                    mobileAdminLink.style.display = 'block';
                 }
             }
 
@@ -363,6 +385,7 @@
 
             // Cart toggle
             const cartBtn = document.getElementById('cartBtn');
+            const mobileCartBtn = document.getElementById('mobileCartBtn');
             const cartSidebar = document.getElementById('cartSidebar');
             const cartClose = document.getElementById('cartClose');
             const cartOverlay = document.getElementById('cartOverlay');
@@ -371,6 +394,16 @@
                 cartBtn.addEventListener('click', () => {
                     cartSidebar.classList.add('active');
                     cartOverlay.classList.add('active');
+                });
+            }
+
+            if (mobileCartBtn) {
+                mobileCartBtn.addEventListener('click', () => {
+                    cartSidebar.classList.add('active');
+                    cartOverlay.classList.add('active');
+                    // Close mobile menu
+                    navMenu.classList.remove('active');
+                    menuToggle.classList.remove('active');
                 });
             }
 
@@ -391,12 +424,25 @@
             // Login modal
             const loginModal = document.getElementById('loginModal');
             const closeLogin = document.getElementById('closeLogin');
+            const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+            const mobileAdminLink = document.getElementById('mobileAdminLink');
 
             if (navLoginBtn) {
                 navLoginBtn.addEventListener('click', () => {
                     if (!isAuthenticated) {
                         loginModal.classList.add('active');
                     }
+                });
+            }
+
+            if (mobileLoginBtn) {
+                mobileLoginBtn.addEventListener('click', () => {
+                    if (!isAuthenticated) {
+                        loginModal.classList.add('active');
+                    }
+                    // Close mobile menu
+                    navMenu.classList.remove('active');
+                    menuToggle.classList.remove('active');
                 });
             }
 
