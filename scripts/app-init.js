@@ -33,11 +33,8 @@ class AppInitializer {
                 console.log('✓ Shopping cart initialized');
             }
 
-            // Initialize privacy banner
-            if (typeof PrivacyBanner !== 'undefined') {
-                const privacyBanner = new PrivacyBanner();
-                console.log('✓ Privacy banner initialized');
-            }
+            // Privacy banner auto-initializes from privacy-banner.js
+            console.log('✓ Privacy banner loaded');
 
             // Check authentication state
             this.checkAuthState();
