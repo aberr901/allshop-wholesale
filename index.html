@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Shop Wholesale - Your Complete Wholesale Solution</title>
     
-    <!-- Favicons -->
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://api.dicebear.com/7.x/shapes/png?seed=allshop&size=32&backgroundColor=2c3e50">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://api.dicebear.com/7.x/shapes/png?seed=allshop&size=180&backgroundColor=2c3e50">
-    <meta name="theme-color" content="#2c3e50">
+    <meta name="theme-color" content="#e31837">
     
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/animations.css">
@@ -17,36 +15,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        .departments-hero {
-            position: relative;
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            text-align: center;
-            padding: 4rem 1rem;
-        }
-
-        .departments-hero-content {
-            max-width: 800px;
-            z-index: 2;
-        }
-
-        .departments-hero h1 {
-            font-family: var(--font-display);
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-        }
-
-        .departments-hero p {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-        }
-
         .departments-section {
             padding: 4rem 0;
             background: var(--light-gray);
@@ -141,16 +109,35 @@
     <!-- Header -->
     <div id="headerPlaceholder" data-current-page="home"></div>
 
-    <!-- Hero Section -->
-    <section class="departments-hero">
-        <div class="departments-hero-content">
-            <h1>Welcome to All Shop Wholesale</h1>
-            <p>Your trusted partner for premium wholesale products across multiple departments. Explore our extensive catalog designed for retailers and businesses.</p>
+    <!-- Hero Section - Cinematic -->
+    <section class="hero-cinematic">
+        <div class="content">
+            <span class="eyebrow">Wholesale Done Right</span>
+            <h1>Where Retailers <span>Come First</span></h1>
+            <p class="tagline">Premium products from trusted brands. Honest pricing with no hidden fees. Everything your store needs to keep customers coming back.</p>
+            <div class="values">
+                <div class="value-item">
+                    <span class="value-text">Quality You Can Trust</span>
+                    <span class="value-sub">Curated brands only</span>
+                </div>
+                <div class="value-item">
+                    <span class="value-text">Pricing That Makes Sense</span>
+                    <span class="value-sub">No hidden fees</span>
+                </div>
+                <div class="value-item">
+                    <span class="value-text">Products That Sell</span>
+                    <span class="value-sub">In-demand inventory</span>
+                </div>
+            </div>
+            <div class="cta-group">
+                <a href="#departments" class="btn-primary-hero">Explore Departments</a>
+                <a href="contact.html" class="btn-outline-hero">Get in Touch</a>
+            </div>
         </div>
     </section>
 
     <!-- Departments Section -->
-    <section class="departments-section">
+    <section class="departments-section" id="departments">
         <div class="container">
             <h2 class="section-title" style="text-align: center; margin-bottom: 1rem;">Shop by Department</h2>
             <p style="text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 2rem;">Select your department to explore our comprehensive range of wholesale products</p>

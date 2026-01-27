@@ -14,8 +14,7 @@ class HeaderComponent {
             <div class="container">
                 <div class="nav-brand">
                     <a href="index.html">
-                        <h1 class="brand-title">All Shop Wholesale</h1>
-                        <p class="brand-tagline">Wholesale Solutions for Your Business</p>
+                        <img src="all-wholesale-logo.png" alt="All Shop Wholesale" class="brand-logo-img">
                     </a>
                 </div>
                 <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
@@ -24,9 +23,9 @@ class HeaderComponent {
                     <span></span>
                 </button>
                 <div class="nav-menu" id="navMenu">
-                    <a href="index.html" class="nav-link ${this.currentPage === 'home' ? 'active' : ''}">Home</a>
-                    <a href="home-kitchen.html" class="nav-link ${this.currentPage === 'home-kitchen' ? 'active' : ''}">Home & Kitchen</a>
-                    <a href="pet-supplies.html" class="nav-link ${this.currentPage === 'pet-supplies' ? 'active' : ''}">Pet Supplies</a>
+                    ${this.currentPage !== 'home' ? '<a href="index.html" class="nav-link">Home</a>' : ''}
+                    ${this.currentPage !== 'home-kitchen' ? '<a href="home-kitchen.html" class="nav-link">Home & Kitchen</a>' : ''}
+                    ${this.currentPage !== 'pet-supplies' ? '<a href="pet-supplies.html" class="nav-link">Pet Supplies</a>' : ''}
                     ${this.showCategories ? `
                     <div class="nav-dropdown">
                         <a href="#products" class="nav-link">Categories</a>
@@ -43,8 +42,8 @@ class HeaderComponent {
                         </div>
                     </div>
                     ` : ''}
-                    <a href="about.html" class="nav-link ${this.currentPage === 'about' ? 'active' : ''}">About Us</a>
-                    <a href="contact.html" class="nav-link ${this.currentPage === 'contact' ? 'active' : ''}">Contact</a>
+                    ${this.currentPage !== 'about' ? '<a href="about.html" class="nav-link">About Us</a>' : ''}
+                    ${this.currentPage !== 'contact' ? '<a href="contact.html" class="nav-link">Contact</a>' : ''}
                 </div>
                 <div class="nav-actions">
                     <button class="btn-login" id="navLoginBtn">

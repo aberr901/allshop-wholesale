@@ -10,6 +10,13 @@ class FooterComponent {
                     <p>All Shop Wholesale SRL - Your trusted partner in premium wholesale products across Europe.</p>
                 </div>
                 <div class="footer-section">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="home-kitchen.html">Home & Kitchen</a></li>
+                        <li><a href="pet-supplies.html">Pet Supplies</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
                         <li><a href="index.html">Home</a></li>
@@ -20,10 +27,10 @@ class FooterComponent {
                 </div>
                 <div class="footer-section">
                     <h4>Contact</h4>
-                    <ul>
-                        <li>📧 info@allshopwholesale.com</li>
-                        <li>📞 0050946820</li>
-                        <li>📍 București, România</li>
+                    <ul class="contact-list">
+                        <li><span class="footer-icon">✉</span> info@allshopwholesale.com</li>
+                        <li><span class="footer-icon">☎</span> 0050946820</li>
+                        <li><span class="footer-icon">⚐</span> București, România</li>
                     </ul>
                 </div>
                 <div class="footer-section">

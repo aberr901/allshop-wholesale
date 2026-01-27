@@ -5,12 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home & Kitchen - All Shop Wholesale</title>
     
-    <!-- Favicons -->
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://api.dicebear.com/7.x/shapes/png?seed=allshop&size=32&backgroundColor=2c3e50">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://api.dicebear.com/7.x/shapes/png?seed=allshop&size=16&backgroundColor=2c3e50">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://api.dicebear.com/7.x/shapes/png?seed=allshop&size=180&backgroundColor=2c3e50">
-    <meta name="theme-color" content="#2c3e50">
+    <meta name="theme-color" content="#e31837">
     
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/animations.css">
@@ -19,72 +16,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body data-department="home-kitchen">
-    <!-- Header -->
-    <header class="header">
-        <nav class="navbar">
-            <div class="container">
-                <div class="nav-brand">
-                    <a href="index.html">
-                        <h1 class="brand-title">All Shop Wholesale</h1>
-                        <p class="brand-tagline">Wholesale Solutions for Your Business</p>
+    <!-- Header Component -->
+    <div id="headerPlaceholder"></div>
+    <script src="components/header.js"></script>
+    <script>
+        const header = new HeaderComponent({
+            currentPage: 'home-kitchen',
+            showCategories: true,
+            showBrands: true
+        });
+        header.mount('#headerPlaceholder');
+    </script>
+
+    <!-- Hero Section - Geometric -->
+    <section class="hero-geometric">
+        <div class="red-block"></div>
+        <div class="content-wrapper">
+            <div class="text-content">
+                <span class="label">Home & Kitchen</span>
+                <h1>Everything for the Home.<em>Brands People Love.</em></h1>
+                <p class="description">From large appliances and cookware to cleaning essentials and home décor—we've got your shelves covered. Washers, ovens, cooktops, and everything in between. Trusted brands, competitive margins, easy ordering.</p>
+                <div class="action-row">
+                    <a href="#products" class="btn-bold">Browse Collection</a>
+                    <a href="#brandsSection" class="text-link">
+                        View All Brands
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M10 4l4 4-4 4"/></svg>
                     </a>
                 </div>
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <div class="nav-menu" id="navMenu">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="pet-supplies.html" class="nav-link">Pet Supplies</a>
-                    
-                    <div class="nav-dropdown">
-                        <a href="#products" class="nav-link">Categories</a>
-                        <div class="dropdown-menu" id="categoriesDropdown">
-                            <!-- Categories will be loaded dynamically -->
-                        </div>
-                    </div>
-                    
-                    <div class="nav-dropdown">
-                        <a href="#brands" class="nav-link">Brands</a>
-                        <div class="dropdown-menu brands-dropdown" id="brandsDropdown">
-                            <!-- Brands will be loaded dynamically -->
-                        </div>
-                    </div>
-                    
-                    <a href="about.html" class="nav-link">About Us</a>
-                    <a href="contact.html" class="nav-link">Contact</a>
-                </div>
-                <div class="nav-actions">
-                    <button class="btn-login" id="navLoginBtn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                        Login
-                    </button>
-                    <a href="admin.html" class="nav-link-admin">Admin</a>
-                    <button class="cart-btn" id="cartBtn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                        </svg>
-                        <span class="cart-count" id="cartCount">0</span>
-                    </button>
-                </div>
             </div>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-background" style="background-image: url('https://images.unsplash.com/photo-1556911220-bff31c812dba?w=1600&h=900&fit=crop');"></div>
-        <div class="hero-content">
-            <h2 class="hero-title">Home & Kitchen Wholesale</h2>
-            <p class="hero-subtitle">Premium appliances and home essentials for your retail business at competitive prices</p>
-            <div class="hero-buttons">
-                <a href="#products" class="btn btn-primary">Browse Appliances</a>
-                <a href="#brandsSection" class="btn btn-secondary-hero">View Brands</a>
+            <div class="image-content">
+                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=500&fit=crop" alt="Modern kitchen appliances" class="main-image">
+                <div class="floating-card">
+                    <div class="card-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <div class="card-text">Top-Rated Selection</div>
+                    <div class="card-sub">Curated for your success</div>
+                </div>
             </div>
         </div>
     </section>
@@ -284,48 +252,8 @@
         });
     </script>
     
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>All Shop Wholesale</h3>
-                    <p>Your trusted partner in premium wholesale products for businesses across Romania and Europe.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Departments</h4>
-                    <ul>
-                        <li><a href="pet-supplies.html">Pet Supplies</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                        <li><a href="admin.html">Admin</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact</h4>
-                    <ul>
-                        <li>📧 info@allshopwholesale.com</li>
-                        <li>📞 0050946820</li>
-                        <li>📍 București, România</li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li>VAT: RO50946820</li>
-                        <li>All Shop Wholesale SRL</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 All Shop Wholesale SRL. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <!-- Footer Component -->
+    <div id="footerPlaceholder"></div>
+    <script src="components/footer.js"></script>
 </body>
 </html>
