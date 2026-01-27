@@ -12,16 +12,16 @@ class FooterComponent {
                 <div class="footer-section">
                     <h4>Shop</h4>
                     <ul>
-                        <li><a href="home-kitchen.html">Home & Kitchen</a></li>
-                        <li><a href="pet-supplies.html">Pet Supplies</a></li>
+                        <li><a href="home-kitchen">Home & Kitchen</a></li>
+                        <li><a href="pet-supplies">Pet Supplies</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="about">About Us</a></li>
+                        <li><a href="contact">Contact</a></li>
                         <li><a href="admin.html">Admin</a></li>
                     </ul>
                 </div>
