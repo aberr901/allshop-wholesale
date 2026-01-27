@@ -39,7 +39,7 @@ const MSAL_CONFIG = {
         authority: 'https://login.microsoftonline.com/7155ba15-8532-4d67-8c0b-dce23ad3c48f',
         redirectUri: window.location.hostname === 'localhost' ? 
             'http://localhost:8000/admin.html' : 
-            'https://aberr901.github.io/online-store/admin.html'
+            'https://allshopwholesale.com/admin.html'
     },
     cache: {
         cacheLocation: 'sessionStorage',
