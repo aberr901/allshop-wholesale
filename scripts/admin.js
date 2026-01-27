@@ -411,7 +411,7 @@ class AdminManager {
                 <td>${product.name}</td>
                 <td>${product.category}</td>
                 <td>${product.brand}</td>
-                <td>$${product.price.toFixed(2)}</td>
+                <td>€${product.price.toFixed(2)}</td>
                 <td>${product.stock}</td>
                 <td>
                     <div class="action-buttons">

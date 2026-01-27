@@ -117,7 +117,7 @@ class ProductManager {
                         <div class="product-brand">${product.brand}</div>
                         ${product.description ? `<div class="product-description">${product.description}</div>` : ''}
                         <div class="product-footer">
-                            <div class="product-price">$${product.price.toFixed(2)}</div>
+                            <div class="product-price">€${product.price.toFixed(2)}</div>
                             <div class="product-stock ${stockClass}">${stockText}</div>
                         </div>
                         <button class="btn btn-primary btn-add-cart" 

@@ -114,7 +114,7 @@ class VirtualProductScroller {
             <div class="product-content">
                 <h3 class="product-title">${product.name}</h3>
                 <p class="product-category">${product.category || ''}</p>
-                <p class="product-price">$${parseFloat(product.price).toFixed(2)}</p>
+                <p class="product-price">€${parseFloat(product.price).toFixed(2)}</p>
                 <div class="product-actions">
                     <div class="qty-controls">
                         <button class="qty-btn qty-minus" data-id="${product.id}" ${disabledAttr}>-</button>

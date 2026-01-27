@@ -229,7 +229,7 @@ function displayProducts(products) {
                 <h3 class="product-name">${product.name}</h3>
                 <p class="product-description">${product.description || ''}</p>
                 <div class="product-footer">
-                    <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
+                    <div class="product-price">€${parseFloat(product.price).toFixed(2)}</div>
                     <div class="product-actions">
                         <div class="quantity-selector">
                             <button class="qty-btn qty-minus" data-product-id="${product.id}" ${product.stock === 0 ? 'disabled' : ''}>−</button>
