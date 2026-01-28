@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management - Admin</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="theme-color" content="#e31837">
+    
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/admin.css">
+</head>
+<body>
+    <!-- MSAL.js library for Entra ID authentication -->
+    <script src="https://alcdn.msauth.net/browser/2.38.1/js/msal-browser.min.js"></script>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1 class="brand-title">Store Admin</h1>
+                </div>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-actions" id="navActions">
+                    <span id="userEmail" style="margin-right: 1rem; color: #666;"></span>
+                    <a href="index.html" class="nav-link-admin">Back to Store</a>
+                    <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="admin-tabs">
+            <button class="tab-btn active" data-tab="products">Products</button>
+            <button class="tab-btn" data-tab="brands">Brands</button>            <button class="tab-btn" data-tab="categories">Categories</button>        </div>
+
+        <div class="admin-layout">
+            <!-- Products Tab -->
+            <div class="tab-content active" id="products-tab">
+                <section class="product-form-section">
+                    <h2 id="formTitle">Add New Product</h2>
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        
+                        <div class="form-group">
+                            <label for="productName">Product Name *</label>
+                            <input type="text" id="productName" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productCategory">Category *</label>
+                                <select id="productCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Cookware">Cookware</option>
+                                    <option value="Bakeware">Bakeware</option>
+                                    <option value="Cutlery">Cutlery & Knives</option>
+                                    <option value="Small Appliances">Small Appliances</option>
+                                    <option value="Kitchen Tools">Kitchen Tools & Gadgets</option>
+                                    <option value="Dinnerware">Dinnerware & Tableware</option>
+                                    <option value="Glassware">Glassware & Drinkware</option>
+                                    <option value="Storage">Food Storage</option>
+                                    <option value="Textiles">Kitchen Textiles</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="productBrand">Brand *</label>
+                                <select id="productBrand" required>
+                                    <option value="">Select Brand</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productDescription">Description</label>
+                            <textarea id="productDescription" rows="4"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productPrice">Price *</label>
+                                <input type="number" id="productPrice" step="0.01" min="0" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="productStock">Stock Quantity *</label>
+                                <input type="number" id="productStock" min="0" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Image</label>
+                            <div class="image-input-toggle">
+                                <label class="radio-option">
+                                    <input type="radio" name="imageType" value="upload" checked>
+                                    <span>Upload File</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="imageType" value="url">
+                                    <span>Image URL</span>
+                                </label>
+                            </div>
+                            <div id="uploadImageSection">
+                                <input type="file" id="productImage" accept="image/*">
+                                <small>Upload an image (will be stored in Azure Storage)</small>
+                            </div>
+                            <div id="urlImageSection" style="display:none;">
+                                <input type="url" id="productImageUrl" placeholder="https://example.com/image.jpg">
+                                <small>Enter an external image URL</small>
+                            </div>
+                            <div id="imagePreview" class="image-preview"></div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save Product</button>
+                            <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="products-list-section">
+                    <h2>Product List</h2>
+                    <div class="search-box">
+                        <input type="text" id="adminSearchInput" placeholder="Search products...">
+                    </div>
+                    <div class="products-table-container">
+                        <table class="products-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Brand</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <!-- Products will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Brands Tab -->
+            <div class="tab-content" id="brands-tab">
+                <section class="brand-form-section">
+                    <h2 id="brandFormTitle">Add New Brand</h2>
+                    <form id="brandForm">
+                        <input type="hidden" id="brandId">
+                        
+                        <div class="form-group">
+                            <label for="brandName">Brand Name *</label>
+                            <input type="text" id="brandName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Brand Logo</label>
+                            <div class="image-input-toggle">
+                                <label class="radio-option">
+                                    <input type="radio" name="logoType" value="upload" checked>
+                                    <span>Upload File</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="logoType" value="url">
+                                    <span>Logo URL</span>
+                                </label>
+                            </div>
+                            <div id="uploadLogoSection">
+                                <input type="file" id="brandLogo" accept="image/*">
+                                <small>Upload a brand logo (will be stored in Azure Storage)</small>
+                            </div>
+                            <div id="urlLogoSection" style="display:none;">
+                                <input type="url" id="brandLogoUrl" placeholder="https://example.com/logo.png">
+                                <small>Enter an external logo URL (e.g., from Wikipedia)</small>
+                            </div>
+                            <div id="brandLogoPreview" class="image-preview"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Departments *</label>
+                            <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="brandDepartments" value="home-kitchen">
+                                    <span>Home & Kitchen</span>
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="brandDepartments" value="pet-supplies">
+                                    <span>Pet Supplies</span>
+                                </label>
+                            </div>
+                            <small>Select one or both departments this brand belongs to</small>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save Brand</button>
+                            <button type="button" class="btn btn-secondary" id="cancelBrandBtn">Cancel</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="brands-list-section">
+                    <h2>Brand List</h2>
+                    <div class="brands-grid-admin" id="brandsGridAdmin">
+                        <!-- Brands will be loaded here -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Categories Tab -->
+            <div class="tab-content" id="categories-tab">
+                <section class="category-form-section">
+                    <h2 id="categoryFormTitle">Add New Category</h2>
+                    <form id="categoryForm">
+                        <input type="hidden" id="categoryId">
+                        
+                        <div class="form-group">
+                            <label for="categoryName">Category Name *</label>
+                            <input type="text" id="categoryName" placeholder="e.g., Electronics, Clothing" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="categoryDescription">Description</label>
+                            <textarea id="categoryDescription" rows="3" placeholder="Category description (optional)"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="categoryDepartment">Department *</label>
+                            <select id="categoryDepartment" required>
+                                <option value="">-- Select Department --</option>
+                                <option value="home-kitchen">Home & Kitchen</option>
+                                <option value="pet-supplies">Pet Supplies</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save Category</button>
+                            <button type="button" class="btn btn-secondary" id="cancelCategoryBtn">Cancel</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="categories-list-section">
+                    <h2>Categories List</h2>
+                    <div class="categories-grid-admin" id="categoriesGridAdmin">
+                        <!-- Categories will be loaded here -->
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>All Shop Wholesale - Admin</h3>
+                    <p>Product management system for wholesale operations.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Back to Store</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>📧 info@allshopwholesale.com</li>
+                        <li>📞 0050946820</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li>VAT: RO50946820</li>
+                        <li>All Shop Wholesale SRL</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 All Shop Wholesale SRL. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/config.js"></script>
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/notifications.js"></script>
+    <script src="scripts/privacy-banner.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/brand-manager.js"></script>
+    <script src="scripts/category-manager.js"></script>
+    <script src="scripts/admin.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navActions = document.getElementById('navActions');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenuToggle.classList.toggle('active');
+                navActions.classList.toggle('active');
+            });
+        }
+    </script>
+</body>
+</html>

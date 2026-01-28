@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshoot - All Shop Wholesale</title>
+    <style>
+        body { 
+            font-family: 'Courier New', monospace; 
+            padding: 20px; 
+            background: #1a1a1a;
+            color: #0f0;
+        }
+        .success { color: #0f0; }
+        .error { color: #f00; }
+        .info { color: #0af; }
+        .warning { color: #fa0; }
+        pre { 
+            background: #000; 
+            padding: 10px; 
+            overflow: auto;
+            border: 1px solid #0f0;
+            margin: 10px 0;
+        }
+        h1 { color: #0af; border-bottom: 2px solid #0af; padding-bottom: 10px; }
+        h2 { color: #fa0; margin-top: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #333; }
+    </style>
+</head>
+<body>
+    <h1>🔍 All Shop Wholesale - System Diagnostics</h1>
+    <div id="output"></div>
+    
+    <script src="scripts/config.js"></script>
+    <script>
+        const output = document.getElementById('output');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = type;
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            output.appendChild(div);
+            console.log(message);
+        }
+        
+        function section(title) {
+            const div = document.createElement('div');
+            div.className = 'test-section';
+            div.innerHTML = `<h2>${title}</h2>`;
+            output.appendChild(div);
+            return div;
+        }
+        
+        async function runDiagnostics() {
+            // 1. Environment Check
+            const env = section('1️⃣ Environment Check');
+            env.innerHTML += `<div class="info">Location: ${window.location.href}</div>`;
+            env.innerHTML += `<div class="info">Hostname: ${window.location.hostname}</div>`;
+            env.innerHTML += `<div class="info">Protocol: ${window.location.protocol}</div>`;
+            env.innerHTML += `<div class="info">Origin: ${window.location.origin}</div>`;
+            
+            // 2. Config Check
+            const config = section('2️⃣ Configuration Check');
+            try {
+                config.innerHTML += `<div class="success">✓ AZURE_CONFIG loaded</div>`;
+                config.innerHTML += `<div class="info">Storage Account: ${AZURE_CONFIG.storageAccountName}</div>`;
+                config.innerHTML += `<div class="info">Data Container: ${AZURE_CONFIG.dataContainerName}</div>`;
+                config.innerHTML += `<div class="info">Images Container: ${AZURE_CONFIG.imagesContainerName}</div>`;
+                config.innerHTML += `<div class="info">SAS Token: ${AZURE_CONFIG.readOnlySasToken.substring(0, 30)}...</div>`;
+                
+                config.innerHTML += `<div class="success">✓ MSAL_CONFIG loaded</div>`;
+                config.innerHTML += `<div class="info">Client ID: ${MSAL_CONFIG.auth.clientId}</div>`;
+                config.innerHTML += `<div class="info">Redirect URI: ${MSAL_CONFIG.auth.redirectUri}</div>`;
+            } catch (error) {
+                config.innerHTML += `<div class="error">✗ Config error: ${error.message}</div>`;
+            }
+            
+            // 3. Test Products.json
+            const productsTest = section('3️⃣ Products.json Test');
+            try {
+                const productsUrl = AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.dataContainerName, 'products.json');
+                productsTest.innerHTML += `<div class="info">URL: ${productsUrl}</div>`;
+                
+                const response = await fetch(productsUrl);
+                productsTest.innerHTML += `<div class="${response.ok ? 'success' : 'error'}">Status: ${response.status} ${response.statusText}</div>`;
+                
+                if (response.ok) {
+                    const products = await response.json();
+                    productsTest.innerHTML += `<div class="success">✓ Products loaded: ${products.length} items</div>`;
+                    if (products.length > 0) {
+                        productsTest.innerHTML += `<pre>${JSON.stringify(products[0], null, 2)}</pre>`;
+                    }
+                } else {
+                    const errorText = await response.text();
+                    productsTest.innerHTML += `<div class="error">Error: ${errorText}</div>`;
+                }
+            } catch (error) {
+                productsTest.innerHTML += `<div class="error">✗ Fetch error: ${error.message}</div>`;
+            }
+            
+            // 4. Test Brands.json
+            const brandsTest = section('4️⃣ Brands.json Test');
+            try {
+                const brandsUrl = AZURE_CONFIG.getBlobUrl(AZURE_CONFIG.dataContainerName, 'brands.json');
+                brandsTest.innerHTML += `<div class="info">URL: ${brandsUrl}</div>`;
+                
+                const response = await fetch(brandsUrl);
+                brandsTest.innerHTML += `<div class="${response.ok ? 'success' : 'error'}">Status: ${response.status} ${response.statusText}</div>`;
+                
+                if (response.ok) {
+                    const brands = await response.json();
+                    brandsTest.innerHTML += `<div class="success">✓ Brands loaded: ${brands.length} items</div>`;
+                    if (brands.length > 0) {
+                        const brand = brands[0];
+                        brandsTest.innerHTML += `<pre>${JSON.stringify(brand, null, 2)}</pre>`;
+                        
+                        // Test brand logo URL
+                        if (brand.logoUrl) {
+                            const logoUrl = brand.logoUrl.includes('?') ? 
+                                brand.logoUrl + '&' + AZURE_CONFIG.readOnlySasToken :
+                                brand.logoUrl + '?' + AZURE_CONFIG.readOnlySasToken;
+                            brandsTest.innerHTML += `<div class="info">Logo URL: ${logoUrl}</div>`;
+                            brandsTest.innerHTML += `<img src="${logoUrl}" style="max-width:100px; border:1px solid #0f0; margin:10px 0;" onerror="this.style.border='1px solid #f00'">`;
+                        }
+                    }
+                } else {
+                    const errorText = await response.text();
+                    brandsTest.innerHTML += `<div class="error">Error: ${errorText}</div>`;
+                }
+            } catch (error) {
+                brandsTest.innerHTML += `<div class="error">✗ Fetch error: ${error.message}</div>`;
+            }
+            
+            // 5. Script Loading
+            const scriptsTest = section('5️⃣ Scripts Loading Test');
+            const scripts = ['storage.js', 'auth.js', 'admin.js', 'brand-manager.js', 'category-manager.js'];
+            for (const script of scripts) {
+                try {
+                    const response = await fetch(`scripts/${script}`);
+                    scriptsTest.innerHTML += `<div class="${response.ok ? 'success' : 'error'}">scripts/${script}: ${response.status}</div>`;
+                } catch (error) {
+                    scriptsTest.innerHTML += `<div class="error">scripts/${script}: ${error.message}</div>`;
+                }
+            }
+            
+            // 6. Summary
+            const summary = section('6️⃣ Summary');
+            summary.innerHTML += `<div class="warning">⚠️ If you see errors above, check:</div>`;
+            summary.innerHTML += `<ul style="color:#fa0;">
+                <li>CORS issues (check browser console)</li>
+                <li>SAS token expiration or permissions</li>
+                <li>File paths and URLs</li>
+                <li>Network connectivity</li>
+            </ul>`;
+            summary.innerHTML += `<div class="info">📝 Check browser console (F12) for additional errors</div>`;
+        }
+        
+        runDiagnostics();
+    </script>
+</body>
+</html>

@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Section Options - AllShop Wholesale</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e31837;
+            --primary-light: #ff1f45;
+            --primary-dark: #b81430;
+            --accent: #000000;
+            --text-dark: #1a1a1a;
+            --text-muted: #6b7280;
+            --white: #ffffff;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: #f5f5f5;
+        }
+
+        .option-label {
+            background: var(--accent);
+            color: var(--white);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .option-label span {
+            color: var(--primary);
+        }
+
+        .description {
+            background: var(--white);
+            padding: 1rem 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* ========================================
+           OPTION 1: CINEMATIC STORYTELLING
+           Full-screen with animated text reveal
+        ======================================== */
+        .hero-cinematic {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000 0%, #1a0a0a 50%, #2d0f0f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-cinematic::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=1080&fit=crop') center/cover;
+            opacity: 0.3;
+        }
+
+        .hero-cinematic::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        }
+
+        .hero-cinematic .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            padding: 2rem;
+        }
+
+        .hero-cinematic .eyebrow {
+            color: var(--primary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .hero-cinematic .eyebrow::before,
+        .hero-cinematic .eyebrow::after {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: var(--primary);
+        }
+
+        .hero-cinematic h1 {
+            font-family: var(--font-display);
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-cinematic h1 span {
+            color: var(--primary);
+            font-style: italic;
+        }
+
+        .hero-cinematic .tagline {
+            font-size: 1.35rem;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cinematic .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .hero-cinematic .stat {
+            text-align: center;
+        }
+
+        .hero-cinematic .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .hero-cinematic .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-cinematic .cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary-hero {
+            padding: 1rem 2.5rem;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary-hero:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-hero {
+            padding: 1rem 2.5rem;
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-outline-hero:hover {
+            border-color: var(--white);
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* ========================================
+           OPTION 2: SPLIT SCREEN MODERN
+           Two-column with animated elements
+        ======================================== */
+        .hero-split {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--white);
+        }
+
+        .hero-split .text-side {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 6rem;
+            background: var(--white);
+        }
+
+        .hero-split .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fef2f2;
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            width: fit-content;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-split .badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero-split h1 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-split h1 .highlight {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-split h1 .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background: rgba(227, 24, 55, 0.2);
+            z-index: -1;
+        }
+
+        .hero-split .lead {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .hero-split .features {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-split .feature {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hero-split .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #fef2f2;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .hero-split .feature-text {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .hero-split .cta-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .hero-split .btn-main {
+            padding: 1.1rem 2.5rem;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hero-split .btn-main:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(227, 24, 55, 0.3);
+        }
+
+        .hero-split .link-text {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .hero-split .link-text:hover {
+            color: var(--primary);
+        }
+
+        .hero-split .image-side {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-split .image-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-split .image-overlay {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            right: 2rem;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hero-split .overlay-stat {
+            text-align: center;
+        }
+
+        .hero-split .overlay-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .hero-split .overlay-label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-split .divider {
+            width: 1px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* ========================================
+           OPTION 3: BOLD GEOMETRIC
+           Asymmetric with strong red accents
+        ======================================== */
+        .hero-geometric {
+            min-height: 100vh;
+            background: var(--accent);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-geometric .red-block {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 45%;
+            height: 100%;
+            background: var(--primary);
+            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .hero-geometric .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 4rem;
+            align-items: center;
+        }
+
+        .hero-geometric .text-content {
+            padding-right: 2rem;
+        }
+
+        .hero-geometric .label {
+            display: inline-block;
+            color: var(--primary);
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .hero-geometric h1 {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-geometric h1 em {
+            font-style: normal;
+            color: var(--primary);
+            display: block;
+        }
+
+        .hero-geometric .description {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+        }
+
+        .hero-geometric .action-row {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hero-geometric .btn-bold {
+            padding: 1.25rem 3rem;
+            background: var(--white);
+            color: var(--accent);
+            border: none;
+            border-radius: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .hero-geometric .btn-bold:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .hero-geometric .video-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .hero-geometric .play-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .hero-geometric .video-link:hover .play-btn {
+            background: var(--white);
+            color: var(--accent);
+        }
+
+        .hero-geometric .image-content {
+            position: relative;
+        }
+
+        .hero-geometric .main-image {
+            width: 100%;
+            border-radius: 0;
+            box-shadow: -30px 30px 0 var(--white);
+        }
+
+        .hero-geometric .floating-card {
+            position: absolute;
+            bottom: -20px;
+            left: -40px;
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .hero-geometric .card-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-geometric .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .hero-geometric .card-value span {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-split {
+                grid-template-columns: 1fr;
+            }
+            .hero-split .text-side {
+                padding: 3rem 2rem;
+            }
+            .hero-split .image-side {
+                height: 50vh;
+            }
+            .hero-geometric .content-wrapper {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+            }
+            .hero-geometric .red-block {
+                width: 100%;
+                height: 40%;
+                clip-path: none;
+                bottom: 0;
+                top: auto;
+            }
+            .hero-cinematic h1 {
+                font-size: 2.5rem;
+            }
+            .hero-split h1,
+            .hero-geometric h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- OPTION 1: CINEMATIC STORYTELLING -->
+    <div class="option-label">Option 1: <span>Cinematic Storytelling</span></div>
+    <p class="description">Dark, dramatic, full-screen hero with animated stats. Great for creating an immersive premium feel.</p>
+    
+    <section class="hero-cinematic">
+        <div class="content">
+            <span class="eyebrow">Trusted by 500+ Retailers</span>
+            <h1>Where Quality Meets <span>Wholesale Value</span></h1>
+            <p class="tagline">Empowering businesses with premium products at unbeatable prices. From kitchen essentials to pet care—we're your one-stop wholesale partner.</p>
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">15K+</span>
+                    <span class="stat-label">Products</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">200+</span>
+                    <span class="stat-label">Brands</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Support</span>
+                </div>
+            </div>
+            <div class="cta-group">
+                <a href="#" class="btn-primary-hero">Explore Catalog</a>
+                <a href="#" class="btn-outline-hero">Request Account</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- OPTION 2: SPLIT SCREEN MODERN -->
+    <div class="option-label">Option 2: <span>Split Screen Modern</span></div>
+    <p class="description">Clean, professional two-column layout. Text on left, stunning imagery on right with overlay stats.</p>
+    
+    <section class="hero-split">
+        <div class="text-side">
+            <span class="badge">Now Serving Nationwide</span>
+            <h1>Your Business, <span class="highlight">Our Priority</span></h1>
+            <p class="lead">We believe every retailer deserves access to premium wholesale products. That's why we've built a catalog of 15,000+ items from trusted brands, delivered with care and competitive pricing.</p>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z"/></svg>
+                    </div>
+                    <span class="feature-text">Free Shipping $500+</span>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z"/></svg>
+                    </div>
+                    <span class="feature-text">Volume Discounts</span>
+                </div>
+            </div>
+            <div class="cta-row">
+                <a href="#" class="btn-main">
+                    Start Shopping
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 10h10M12 6l4 4-4 4"/></svg>
+                </a>
+                <a href="#" class="link-text">
+                    Contact Sales
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M10 4l4 4-4 4"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="image-side">
+            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1000&h=1200&fit=crop" alt="Wholesale warehouse">
+            <div class="image-overlay">
+                <div class="overlay-stat">
+                    <span class="overlay-number">500+</span>
+                    <span class="overlay-label">Happy Retailers</span>
+                </div>
+                <div class="divider"></div>
+                <div class="overlay-stat">
+                    <span class="overlay-number">15K+</span>
+                    <span class="overlay-label">Products</span>
+                </div>
+                <div class="divider"></div>
+                <div class="overlay-stat">
+                    <span class="overlay-number">98%</span>
+                    <span class="overlay-label">Satisfaction</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OPTION 3: BOLD GEOMETRIC -->
+    <div class="option-label">Option 3: <span>Bold Geometric</span></div>
+    <p class="description">Strong red accent with asymmetric design. Maximum brand impact with edgy, modern aesthetic.</p>
+    
+    <section class="hero-geometric">
+        <div class="red-block"></div>
+        <div class="content-wrapper">
+            <div class="text-content">
+                <span class="label">Wholesale Solutions</span>
+                <h1>Built for Retailers.<em>Priced to Win.</em></h1>
+                <p class="description" style="background: transparent; border: none; text-align: left; padding: 0;">We partner with businesses like yours to deliver premium products at wholesale prices. No middlemen, no markups—just quality you can trust and margins you can grow on.</p>
+                <div class="action-row">
+                    <a href="#" class="btn-bold">Shop Now</a>
+                    <a href="#" class="video-link">
+                        <span class="play-btn">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5 3l8 5-8 5V3z"/></svg>
+                        </span>
+                        Watch Our Story
+                    </a>
+                </div>
+            </div>
+            <div class="image-content">
+                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=500&fit=crop" alt="Premium products" class="main-image">
+                <div class="floating-card">
+                    <div class="card-title">Monthly Savings</div>
+                    <div class="card-value">Up to <span>40%</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div style="padding: 4rem 2rem; text-align: center; background: var(--accent); color: var(--white);">
+        <h2 style="margin-bottom: 1rem; font-family: var(--font-display);">Which style do you prefer?</h2>
+        <p style="opacity: 0.7;">Reply with <strong style="color: var(--primary);">1</strong>, <strong style="color: var(--primary);">2</strong>, or <strong style="color: var(--primary);">3</strong></p>
+    </div>
+
+</body>
+</html>

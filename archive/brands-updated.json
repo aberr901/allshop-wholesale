@@ -1,0 +1,38 @@
+[
+  {
+    "id": "brand_pet_001",
+    "name": "Purina",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Purina_logo.svg/200px-Purina_logo.svg.png",
+    "departments": ["pet-supplies"]
+  },
+  {
+    "id": "brand_pet_002",
+    "name": "Royal Canin",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Royal_Canin_Logo.svg/200px-Royal_Canin_Logo.svg.png",
+    "departments": ["pet-supplies"]
+  },
+  {
+    "id": "brand_pet_003",
+    "name": "KONG",
+    "logoUrl": "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=200&h=200&fit=crop",
+    "departments": ["pet-supplies"]
+  },
+  {
+    "id": "brand_pet_004",
+    "name": "Pedigree",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Pedigree_logo.svg/200px-Pedigree_logo.svg.png",
+    "departments": ["pet-supplies"]
+  },
+  {
+    "id": "brand_pet_005",
+    "name": "Whiskas",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Whiskas_logo.svg/200px-Whiskas_logo.svg.png",
+    "departments": ["pet-supplies"]
+  },
+  {
+    "id": "brand_1768406878486_k225ri6lw",
+    "name": "AEG",
+    "logoUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGQnd5lxDcGQep0K1-NkBPtT9n_CVSArFN5w&s",
+    "departments": ["home-kitchen"]
+  }
+]
