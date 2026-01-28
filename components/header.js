@@ -14,7 +14,7 @@ class HeaderComponent {
             <div class="container">
                 <div class="nav-brand">
                     <a href="/">
-                        <img src="all-wholesale-logo.png" alt="All Shop Wholesale" class="brand-logo-img">
+                        <img src="logo.svg" alt="All Shop Wholesale" class="brand-logo-img">
                     </a>
                 </div>
                 <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">

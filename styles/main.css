@@ -19,8 +19,8 @@
     --shadow: 0 2px 15px rgba(0,0,0,0.1);
     --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --font-display: 'Playfair Display', serif;
-    --font-body: 'Inter', sans-serif;
+    --font-display: 'Nunito', sans-serif;
+    --font-body: 'Nunito', sans-serif;
 }
 
 /* === Reset & Base === */

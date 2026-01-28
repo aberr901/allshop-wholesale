@@ -22,20 +22,12 @@
     <link rel="stylesheet" href="styles/animations.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body data-department="pet-supplies">
     <!-- Header Component -->
-    <div id="headerPlaceholder"></div>
+    <div id="headerPlaceholder" data-current-page="pet-supplies" data-show-categories="true" data-show-brands="true"></div>
     <script src="components/header.js"></script>
-    <script>
-        const header = new HeaderComponent({
-            currentPage: 'pet-supplies',
-            showCategories: true,
-            showBrands: true
-        });
-        header.mount('#headerPlaceholder');
-    </script>
 
     <!-- Hero Section - Geometric -->
     <section class="hero-geometric">
