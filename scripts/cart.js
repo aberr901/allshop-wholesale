@@ -2,7 +2,6 @@
 class ShoppingCart {
     constructor() {
         this.items = this.loadCart();
-        this.initializeEventListeners();
         // Initialize cart display on page load
         this.updateCartDisplay();
     }
@@ -79,7 +78,11 @@ class ShoppingCart {
         const cartItemsContainer = document.getElementById('cartItems');
         const cartTotal = document.getElementById('cartTotal');
         
-        if (!cartItemsContainer) return;
+        if (!cartItemsContainer) {
+            // Cart sidebar not rendered yet, try again in a moment
+            setTimeout(() => this.updateCartDisplay(), 50);
+            return;
+        }
 
         if (this.items.length === 0) {
             cartItemsContainer.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
@@ -105,34 +108,6 @@ class ShoppingCart {
 
         if (cartTotal) {
             cartTotal.textContent = `€${this.getTotal().toFixed(2)}`;
-        }
-    }
-
-    initializeEventListeners() {
-        // Open cart sidebar
-        const cartIcon = document.querySelector('.cart-icon');
-        if (cartIcon) {
-            cartIcon.addEventListener('click', () => {
-                document.getElementById('cartSidebar').classList.add('open');
-            });
-        }
-
-        // Close cart sidebar
-        const closeCart = document.getElementById('closeCart');
-        if (closeCart) {
-            closeCart.addEventListener('click', () => {
-                document.getElementById('cartSidebar').classList.remove('open');
-            });
-        }
-
-        // Close cart when clicking outside
-        const cartSidebar = document.getElementById('cartSidebar');
-        if (cartSidebar) {
-            document.addEventListener('click', (e) => {
-                if (!cartSidebar.contains(e.target) && !e.target.closest('.cart-icon')) {
-                    cartSidebar.classList.remove('open');
-                }
-            });
         }
     }
 }

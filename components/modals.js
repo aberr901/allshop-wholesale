@@ -42,7 +42,7 @@ class ModalComponent {
     renderCartSidebar() {
         return `
     <!-- Cart Sidebar -->
-    <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-sidebar no-transition" id="cartSidebar">
         <div class="cart-header">
             <h2>Shopping Cart</h2>
             <button class="close-cart" id="closeCart">
@@ -77,6 +77,14 @@ class ModalComponent {
     }
 
     initializeEvents() {
+        // Remove no-transition class after a brief delay to prevent flash on page load
+        setTimeout(() => {
+            const cartSidebar = document.getElementById('cartSidebar');
+            if (cartSidebar) {
+                cartSidebar.classList.remove('no-transition');
+            }
+        }, 100);
+
         // Login Modal Events
         const navLoginBtn = document.getElementById('navLoginBtn');
         const loginModal = document.getElementById('loginModal');

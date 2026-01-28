@@ -68,75 +68,88 @@ async function initProductsWithBrands(department = null) {
 }
 
 function populateNavigationDropdowns(brands, categories) {
-    // Populate brands dropdown in navigation
-    const brandsDropdown = document.getElementById('brandsDropdown');
-    if (brandsDropdown && brands.length > 0) {
-        brandsDropdown.innerHTML = brands.map(brand => {
-            let logoUrl = '';
-            if (brand.logoUrl) {
-                // Check if external URL or blob storage URL
-                if (brand.logoUrl.startsWith('http://') || brand.logoUrl.startsWith('https://')) {
-                    if (brand.logoUrl.includes('blob.core.windows.net')) {
-                        // Azure blob URL - append SAS token
-                        logoUrl = brand.logoUrl + '?' + AZURE_CONFIG.readOnlySasToken;
+    // Wait for header to be ready (in case of race condition)
+    const waitForDropdowns = () => {
+        const brandsDropdown = document.getElementById('brandsDropdown');
+        const categoriesDropdown = document.getElementById('categoriesDropdown');
+        
+        if (!brandsDropdown && !categoriesDropdown) {
+            // Wait a bit and try again
+            setTimeout(waitForDropdowns, 50);
+            return;
+        }
+        
+        // Populate brands dropdown in navigation
+        if (brandsDropdown && brands.length > 0) {
+            brandsDropdown.innerHTML = brands.map(brand => {
+                let logoUrl = '';
+                if (brand.logoUrl) {
+                    // Check if external URL or blob storage URL
+                    if (brand.logoUrl.startsWith('http://') || brand.logoUrl.startsWith('https://')) {
+                        if (brand.logoUrl.includes('blob.core.windows.net')) {
+                            // Azure blob URL - append SAS token
+                            logoUrl = brand.logoUrl + '?' + AZURE_CONFIG.readOnlySasToken;
+                        } else {
+                            // External URL - use as-is
+                            logoUrl = brand.logoUrl;
+                        }
                     } else {
-                        // External URL - use as-is
-                        logoUrl = brand.logoUrl;
+                        // Relative path - append SAS token
+                        logoUrl = brand.logoUrl + '?' + AZURE_CONFIG.readOnlySasToken;
                     }
-                } else {
-                    // Relative path - append SAS token
-                    logoUrl = brand.logoUrl + '?' + AZURE_CONFIG.readOnlySasToken;
                 }
-            }
-            const logoHtml = logoUrl ? 
-                '<img src="' + logoUrl + '" alt="' + brand.name + '" onerror="this.style.display=\'none\'">' : 
-                '';
-            return '<a href="#products" data-brand="' + brand.name + '">' + 
-                logoHtml + brand.name + '</a>';
-        }).join('');
-        
-        // Add click handlers
-        brandsDropdown.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const brandName = link.dataset.brand;
-                document.getElementById('brandFilter').value = brandName;
-                document.getElementById('brandFilter').dispatchEvent(new Event('change'));
-                document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-                
-                // Close mobile menu if open
-                const navMenu = document.getElementById('navMenu');
-                const menuToggle = document.getElementById('mobileMenuToggle');
-                if (navMenu) navMenu.classList.remove('active');
-                if (menuToggle) menuToggle.classList.remove('active');
+                const logoHtml = logoUrl ? 
+                    '<img src="' + logoUrl + '" alt="' + brand.name + '" onerror="this.style.display=\'none\'">' : 
+                    '';
+                return '<a href="#products" data-brand="' + brand.name + '">' + 
+                    logoHtml + brand.name + '</a>';
+            }).join('');
+            
+            // Add click handlers
+            brandsDropdown.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const brandName = link.dataset.brand;
+                    document.getElementById('brandFilter').value = brandName;
+                    document.getElementById('brandFilter').dispatchEvent(new Event('change'));
+                    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Close mobile menu if open
+                    const navMenu = document.getElementById('navMenu');
+                    const menuToggle = document.getElementById('mobileMenuToggle');
+                    if (navMenu) navMenu.classList.remove('active');
+                    if (menuToggle) menuToggle.classList.remove('active');
+                });
             });
-        });
-    }
+        }
+        
+        // Populate categories dropdown
+        if (categoriesDropdown && categories && categories.length > 0) {
+            categoriesDropdown.innerHTML = categories.map(cat => 
+                '<a href="#products" data-category="' + cat.name + '">' + cat.name + '</a>'
+            ).join('');
+            
+            // Add click handlers
+            categoriesDropdown.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const category = link.dataset.category;
+                    document.getElementById('categoryFilter').value = category;
+                    document.getElementById('categoryFilter').dispatchEvent(new Event('change'));
+                    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+                
+                    // Close mobile menu if open
+                    const navMenu = document.getElementById('navMenu');
+                    const menuToggle = document.getElementById('mobileMenuToggle');
+                    if (navMenu) navMenu.classList.remove('active');
+                    if (menuToggle) menuToggle.classList.remove('active');
+                });
+            });
+        }
+    };
     
-    // Populate categories dropdown
-    const categoriesDropdown = document.getElementById('categoriesDropdown');
-    if (categoriesDropdown && categories && categories.length > 0) {
-        categoriesDropdown.innerHTML = categories.map(cat => 
-            '<a href="#products" data-category="' + cat.name + '">' + cat.name + '</a>'
-        ).join('');
-        
-        // Add click handlers
-        categoriesDropdown.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const category = link.dataset.category;
-                document.getElementById('categoryFilter').value = category;
-                document.getElementById('categoryFilter').dispatchEvent(new Event('change'));
-                document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-                
-                // Close mobile menu if open
-                const navMenu = document.getElementById('navMenu');
-                const menuToggle = document.getElementById('mobileMenuToggle');
-                if (navMenu) navMenu.classList.remove('active');
-                if (menuToggle) menuToggle.classList.remove('active');
-            });
-        });
-    }
+    // Start waiting for dropdowns
+    waitForDropdowns();
 }
 
 function displayBrands(brands) {
@@ -367,37 +380,5 @@ function setupFiltering(products) {
 
 // Cart functionality handled by cart.js and event listeners above
 
-// Initialize when page loads
-window.cart = null;
-
-document.addEventListener('DOMContentLoaded', () => {
-    window.cart = new ShoppingCart();
-    
-    // Get department from body data attribute if set
-    const department = document.body.getAttribute('data-department');
-    initProductsWithBrands(department);
-    
-    setupCartToggle();
-});
-
-function setupCartToggle() {
-    const cartBtn = document.getElementById('cartBtn');
-    const cartSidebar = document.getElementById('cartSidebar');
-    const cartOverlay = document.getElementById('cartOverlay');
-    const closeCart = document.getElementById('closeCart');
-
-    cartBtn?.addEventListener('click', () => {
-        cartSidebar.classList.add('active');
-        cartOverlay.classList.add('active');
-    });
-
-    closeCart?.addEventListener('click', () => {
-        cartSidebar.classList.remove('active');
-        cartOverlay.classList.remove('active');
-    });
-
-    cartOverlay?.addEventListener('click', () => {
-        cartSidebar.classList.remove('active');
-        cartOverlay.classList.remove('active');
-    });
-}
+// Product initialization is now handled by app-init.js
+// This ensures proper sequencing across all pages

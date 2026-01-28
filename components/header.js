@@ -89,6 +89,28 @@ class HeaderComponent {
                 mobileMenuToggle.classList.toggle('active');
             });
         }
+
+        // Handle dropdown trigger links
+        const dropdownTriggers = document.querySelectorAll('.nav-dropdown > .nav-link');
+        dropdownTriggers.forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Toggle dropdown on mobile
+                if (window.innerWidth <= 768) {
+                    const dropdown = trigger.nextElementSibling;
+                    if (dropdown) {
+                        const isVisible = dropdown.style.display === 'block';
+                        // Close all other dropdowns
+                        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                            menu.style.display = 'none';
+                        });
+                        // Toggle current dropdown
+                        dropdown.style.display = isVisible ? 'none' : 'block';
+                    }
+                }
+                // On desktop, hover will handle it via CSS
+            });
+        });
     }
 }
 

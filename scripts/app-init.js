@@ -26,15 +26,21 @@ class AppInitializer {
                 console.log('✓ Notification system initialized');
             }
 
-            // Initialize cart
-            if (typeof ShoppingCart !== 'undefined' && !this.cart) {
+            // Initialize cart (only if not already initialized by cart.js)
+            if (typeof ShoppingCart !== 'undefined' && !window.cart) {
                 this.cart = new ShoppingCart();
                 window.cart = this.cart;
                 console.log('✓ Shopping cart initialized');
+            } else if (window.cart) {
+                this.cart = window.cart;
+                console.log('✓ Shopping cart already initialized');
             }
 
             // Privacy banner auto-initializes from privacy-banner.js
             console.log('✓ Privacy banner loaded');
+
+            // Initialize products if this is a store page
+            await this.initializeStorePage();
 
             // Check authentication state
             this.checkAuthState();
@@ -44,6 +50,17 @@ class AppInitializer {
             console.log('✅ App initialization complete!');
         } catch (error) {
             console.error('❌ Error initializing app:', error);
+        }
+    }
+
+    async initializeStorePage() {
+        // Check if this is a store page (has data-department attribute)
+        const department = document.body.getAttribute('data-department');
+        
+        if (department && typeof initProductsWithBrands !== 'undefined') {
+            console.log('✓ Store page detected:', department);
+            await initProductsWithBrands(department);
+            console.log('✓ Products initialized for', department);
         }
     }
 

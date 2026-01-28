@@ -1138,6 +1138,11 @@ img {
     flex-direction: column;
 }
 
+/* Prevent transition flash on page load */
+.cart-sidebar.no-transition {
+    transition: none !important;
+}
+
 .cart-sidebar.active {
     right: 0;
 }
@@ -1373,21 +1378,27 @@ img {
     
     .nav-dropdown .dropdown-menu {
         position: static;
-        opacity: 1;
-        visibility: visible;
+        opacity: 0;
+        visibility: hidden;
+        max-height: 0;
+        overflow: hidden;
         box-shadow: none;
         transform: none;
-        margin-top: 0.5rem;
+        margin-top: 0;
         margin-left: 1rem;
-        padding: 0.5rem 0;
+        padding: 0;
         background: transparent;
         min-width: auto;
         width: 100%;
+        transition: all 0.3s ease;
     }
     
-    .nav-dropdown:hover .dropdown-menu {
+    .nav-dropdown .dropdown-menu[style*="display: block"] {
         opacity: 1;
         visibility: visible;
+        max-height: 500px;
+        margin-top: 0.5rem;
+        padding: 0.5rem 0;
     }
     
     .brands-dropdown {
