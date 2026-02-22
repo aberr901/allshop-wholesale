@@ -247,6 +247,15 @@ const CONFIG = {
 };
 ```
 
+## 📚 Developer Documentation
+
+For a concise technical overview and philosophy guide aimed at developers reproducing or extending the site, see [`Documentation/DEVELOPER-OVERVIEW.md`](Documentation/DEVELOPER-OVERVIEW.md).
+
+Other reference docs in [`Documentation/`](Documentation/):
+- [`QUICK-REFERENCE.md`](Documentation/QUICK-REFERENCE.md) – Common tasks and code snippets
+- [`DEPLOYMENT-CHECKLIST.md`](Documentation/DEPLOYMENT-CHECKLIST.md) – Azure deployment steps
+- [`REFACTORING-COMPLETE.md`](Documentation/REFACTORING-COMPLETE.md) – January 2026 refactor write-up
+
 ## 🛠️ Development Guidelines
 
 ### Adding a New Page
