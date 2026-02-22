@@ -65,7 +65,7 @@ allshop-wholesale/
 | Concern | Technology |
 |---|---|
 | Frontend | Vanilla JavaScript (ES6+), HTML5, CSS3 |
-| Hosting | Azure Static Web Apps |
+| Hosting | Azure Static Web Apps (or GitHub Pages) |
 | Data storage | Azure Blob Storage (JSON files) |
 | Image storage | Azure Blob Storage |
 | Admin auth | Microsoft Entra ID (Azure AD) via MSAL.js |
