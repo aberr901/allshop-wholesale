@@ -10,7 +10,7 @@ All Shop Wholesale is deliberately **framework-free**. Every feature is implemen
 
 - **Zero build tooling** – no bundler, no transpiler, no `npm install` required to run the site.
 - **Zero runtime framework** – no React, Vue, or Angular.  Components are small self-registering vanilla JS files.
-- **Static hosting first** – the entire storefront is a collection of static files served from Azure Static Web Apps.  The only "backend" is Azure Blob Storage (JSON files + images).
+- **Static hosting first** – the entire storefront is a collection of static files served from Azure Static Web Apps or even GitHub Pages.  The only "backend" is Azure Blob Storage (JSON files + images).
 - **Progressive enhancement** – pages are meaningful HTML even before JS runs; scripts add interactivity on top.
 
 This keeps deployment simple, hosting costs low, and the codebase accessible to any web developer regardless of framework experience.
